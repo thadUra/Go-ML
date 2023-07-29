@@ -1,54 +1,46 @@
 package game
 
-import "math"
-
 type Soccer struct {
-	FIELD_WIDTH   int // feet
-	FIELD_HEIGHT  int // feet
-	NET_WIDTH     int // feet
-	NET_HEIGHT    int // feet
-	BALL_WEIGHT   int // grams
-	BALL_DIAMETER int // inches
+	FIELD_WIDTH   float64 // feet
+	FIELD_HEIGHT  float64 // feet
+	NET_WIDTH     float64 // feet
+	NET_HEIGHT    float64 // feet
+	NET_DIAMETER  float64 // feet
+	BALL_WEIGHT   float64 // grams
+	BALL_DIAMETER float64 // feet
 }
 
 /**
  *  Initialize soccer field
-*   Default to fifa regulations
+*   Default to fifa regulations for field dimensions
 */
-func InitSoccer(field_width int, field_height int, net_width int, net_height int, weight int, diameter int, def bool) Soccer {
+func InitSoccer(
+	field_width float64,
+	field_height float64,
+	net_width float64,
+	net_height float64,
+	net_diameter float64,
+	weight float64,
+	ball_diameter float64,
+	def bool,
+) Soccer {
 	var env Soccer
 	if def {
-		env.FIELD_HEIGHT = 345 // fifa regulations roughly
-		env.FIELD_WIDTH = 224  // fifa regulations roughly
-		env.NET_WIDTH = 24
-		env.NET_HEIGHT = 8
-		env.BALL_WEIGHT = 430
-		env.BALL_DIAMETER = 9
+		env.FIELD_HEIGHT = 345.0 // fifa regulations roughly
+		env.FIELD_WIDTH = 224.0  // fifa regulations roughly
+		env.NET_WIDTH = 24.0
+		env.NET_HEIGHT = 8.0
+		env.NET_DIAMETER = 2.0 / 3.0
+		env.BALL_WEIGHT = 430.0
+		env.BALL_DIAMETER = 0.75
 	} else {
 		env.FIELD_HEIGHT = field_height
 		env.FIELD_WIDTH = field_width
 		env.NET_WIDTH = net_width
 		env.NET_HEIGHT = net_height
+		env.NET_DIAMETER = net_diameter
 		env.BALL_WEIGHT = weight
-		env.BALL_DIAMETER = diameter
+		env.BALL_DIAMETER = ball_diameter
 	}
 	return env
-}
-
-func (env Soccer) GetLeftPostAngle(shot Shot) float64 {
-	width := (env.FIELD_WIDTH / 2) - (env.NET_WIDTH / 2) - shot.DISTANCE_X
-	height := shot.DISTANCE_Y
-	return math.Atan(float64(width / height))
-}
-
-func (env Soccer) GetRightPostAngle(shot Shot) float64 {
-	width := (env.FIELD_WIDTH / 2) + (env.NET_WIDTH / 2) - shot.DISTANCE_X
-	height := shot.DISTANCE_Y
-	return math.Atan(float64(width / height))
-}
-
-func (env Soccer) GetCrossbarAngle(shot Shot) float64 {
-	width := (env.FIELD_WIDTH / 2) - shot.DISTANCE_X
-	length := math.Sqrt(float64((shot.DISTANCE_Y * shot.DISTANCE_Y) + (width * width)))
-	return math.Atan(float64(env.NET_HEIGHT) / length)
 }
