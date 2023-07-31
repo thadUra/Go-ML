@@ -1,8 +1,10 @@
 package ml
 
+import "gonum.org/v1/gonum/mat"
+
 type Layer struct {
-	INPUT  int
-	OUTPUT int
+	INPUT  *mat.Dense
+	OUTPUT *mat.Dense
 }
 
 func (node Layer) ForwardPropagation(input int) float32 {

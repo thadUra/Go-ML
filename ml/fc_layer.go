@@ -7,6 +7,7 @@ import (
 )
 
 type FCLayer struct {
+	Layer
 	INPUT   *mat.Dense
 	OUTPUT  *mat.Dense
 	WEIGHTS *mat.Dense
@@ -31,7 +32,7 @@ func InitFCLayer(input_size int, output_size int) FCLayer {
 	return layer
 }
 
-func (layer FCLayer) ForwardPropagation(input *mat.Dense) *mat.Dense {
+func (layer *FCLayer) ForwardPropagation(input *mat.Dense) *mat.Dense {
 	layer.INPUT = input
 	var dot mat.Dense
 	dot.Mul(layer.INPUT, layer.WEIGHTS)
@@ -39,12 +40,13 @@ func (layer FCLayer) ForwardPropagation(input *mat.Dense) *mat.Dense {
 	return layer.OUTPUT
 }
 
-func (layer FCLayer) BackPropagation(output_error *mat.Dense, learning_rate float64) *mat.Dense {
-	var input_error, weights_error mat.Dense
+func (layer *FCLayer) BackPropagation(output_error *mat.Dense, learning_rate float64) *mat.Dense {
+	var input_error, weights_error, new_weight, new_bias mat.Dense
 	input_error.Mul(output_error, layer.WEIGHTS.T())
 	weights_error.Mul(layer.WEIGHTS.T(), output_error)
-	// new_weight.Mul()
+	new_weight.Scale(learning_rate, &weights_error)
+	new_bias.Scale(learning_rate, output_error)
+	layer.WEIGHTS.Sub(layer.WEIGHTS, &new_weight)
+	layer.BIAS.Sub(layer.BIAS, &new_bias)
 	return &input_error
-	// layer.WEIGHTS.Mul()
-
 }
