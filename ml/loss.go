@@ -1,7 +1,6 @@
 package ml
 
 import (
-	"fmt"
 	"math"
 
 	"gonum.org/v1/gonum/mat"
@@ -15,7 +14,6 @@ func Mse(y_true, y_pred *mat.Dense) float64 {
 	for r := 0; r < rows; r++ {
 		for c := 0; c < cols; c++ {
 			sum += math.Pow(ret.At(r, c), 2)
-			fmt.Printf("%f\n", sum)
 		}
 	}
 	mean := float64(sum / float64(rows*cols))
@@ -23,8 +21,8 @@ func Mse(y_true, y_pred *mat.Dense) float64 {
 }
 
 func Mse_prime(y_true, y_pred *mat.Dense) *mat.Dense {
-	ret := mat.DenseCopyOf(y_true)
-	ret.Sub(y_true, y_pred)
+	ret := mat.DenseCopyOf(y_pred)
+	ret.Sub(y_pred, y_true)
 	rows, cols := y_true.Dims()
 	mult := float64(2 / float64(rows*cols))
 	ret.Scale(mult, ret)
