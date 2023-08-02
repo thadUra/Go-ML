@@ -1,10 +1,11 @@
-package testing
+package tests
 
 import (
-	"Soccer-Penalty-Kick-ML-Threading/game"
+	"Soccer-Penalty-Kick-ML-Threading/soccer"
 	"fmt"
 	"math"
 	"math/rand"
+	"testing"
 	"time"
 )
 
@@ -13,23 +14,21 @@ import (
  * Creates a simple environment to perform steps on soccer game
  * Tests the game package with random actions
  */
-func RunEnvSpaceTest() {
-
-	fmt.Printf("=====RUNNING ENV SPACE TEST=====\n")
+func TestSoccerGame(t *testing.T) {
 
 	// Initialize Game Env
 	var reward int
 	var goals int
-	params := game.InitSoccer(0, 0, 0, 0, 0, 0, 0, true)
-	env := game.InitEnvironment(params)
+	params := soccer.InitSoccer(0, 0, 0, 0, 0, 0, 0, true)
+	env := soccer.InitEnvironment(params)
 
 	// Chosen Manual Test
-	location := game.InitShot(145, 50, false)
+	location := soccer.InitShot(145, 50, false)
 	action := []float64{-25.0 * math.Pi / 180.0, 10.0 * math.Pi / 180.0, 35.0}
 	fmt.Printf("Reward: %d\n\n", env.Step(action, location, true))
 
 	// 1000 Random Steps Timed Single Threaded for Penalty Shot
-	location = game.InitShot(0, 0, true)
+	location = soccer.InitShot(0, 0, true)
 	test := func(action []float64) {
 		result := env.Step(action, location, false)
 		reward += result
@@ -73,7 +72,4 @@ func RunEnvSpaceTest() {
 	// wg.Wait()
 	// elapsed = time.Since(start)
 	// fmt.Printf("Multithreading: %s with reward: %d and %d goals\n", elapsed, reward, goals)
-
-	fmt.Printf("=====ENDING ENV SPACE TEST=====\n")
-
 }

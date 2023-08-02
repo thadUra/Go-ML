@@ -1,4 +1,4 @@
-package ml
+package nn
 
 import (
 	"fmt"
@@ -78,7 +78,11 @@ func (net *Network) Fit(x_train, y_train [][]float64, epochs int, learning_rate 
 			}
 		}
 		err /= float64(samples)
-		fmt.Printf("epoch %d/%d  error=%f\n", i+1, epochs, err)
+		// if i < 3 || i >= epochs-3 {
+		// 	fmt.Printf("epoch %d/%d  error=%f\n", i+1, epochs, err)
+		// } else if i >= 3 && i < epochs-3 && i == 4 {
+		// 	fmt.Println("...")
+		// }
 	}
 	elapsed := time.Since(start)
 	fmt.Printf("Training Time: %s\n", elapsed)

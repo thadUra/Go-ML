@@ -1,4 +1,4 @@
-package ml
+package nn
 
 import (
 	"math/rand"
@@ -18,10 +18,10 @@ func InitFCLayer(input_size int, output_size int) *FCLayer {
 	weight := make([]float64, input_size*output_size)
 	bias := make([]float64, output_size)
 	for i := range weight {
-		weight[i] = rand.Float64() - 0.5
+		weight[i] = 2*rand.Float64() - 1.0
 	}
 	for i := range bias {
-		bias[i] = rand.Float64() - 0.5
+		bias[i] = 2*rand.Float64() - 1.0
 	}
 
 	// Return FCLayer
