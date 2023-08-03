@@ -41,6 +41,12 @@ func InitSoccer() Soccer {
 	return env
 }
 
+/**
+ *  Step() Func
+ *  Performs one step in soccer environment
+ *  Can either dribble or shoot ball from current position
+ *  Shot parameters picked by other ml model
+ */
 func (scr *Soccer) Step(
 	action []float64,
 ) (float64, bool, error) {
@@ -51,12 +57,12 @@ func (scr *Soccer) Step(
 
 	// Perform action (WIP WITH MANUAL SHOT PARAMS)
 	if action[0] == 0 {
-		// Get shot params from clustering ml model if initialized
+		// Get shot params from ml model if initialized
 		var action []float64
 		if scr.shotModel != nil {
 			return -1, true, errors.New("soccer.Step: shot model not initialized")
 		} else {
-			action = []float64{-18.0 * math.Pi / 180.0, 10.0 * math.Pi / 180.0, 35.0} // Manual pararms temporarily
+			action = []float64{-15.0 * math.Pi / 180.0, 25.0 * math.Pi / 180.0, 25.0} // Manual pararms temporarily
 			// action = []float64{
 			// 	((rand.Float64() * 160) - 80) * math.Pi / 180.0,
 			// 	(rand.Float64() * 90) * math.Pi / 180.0,
@@ -64,7 +70,7 @@ func (scr *Soccer) Step(
 		}
 		// Check errors with any model prediction
 
-		result, err := scr.field.Shoot(scr.pos, action, false)
+		result, err := scr.field.Shoot(scr.pos, action, true)
 		if err != nil {
 			return -1, true, err
 		} else {
@@ -105,14 +111,26 @@ func (scr *Soccer) Step(
 	}
 }
 
+/**
+ *  Reset() Func
+ *  Resets position to random spot on field
+ */
 func (scr *Soccer) Reset() {
 	scr.pos = GeneratePos(rand.Float64()*scr.field.FIELD_HEIGHT, rand.Float64()*scr.field.FIELD_WIDTH, false)
 }
 
-func (scr *Soccer) GetActionSpace() [][]float64 {
-	return scr.ACTION_SPACE
+/**
+ *  GetNumActions() Func
+ *  Accessor for action space size
+ */
+func (scr *Soccer) GetNumActions() int {
+	return len(scr.ACTION_SPACE)
 }
 
-func (scr *Soccer) GetObservationSpace() [][]float64 {
-	return scr.OBSERVATION_SPACE
+/**
+ *  GetNumObservations() Func
+ *  Accessor for observation space size
+ */
+func (scr *Soccer) GetNumObservations() int {
+	return len(scr.OBSERVATION_SPACE)
 }

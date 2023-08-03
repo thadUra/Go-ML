@@ -76,8 +76,10 @@ func (f Field) GetShotParameterLimits() [][]float64 {
 }
 
 /**
- *  GetSotParameterLimits() Func
- *  Return the range of horizontal/vertical angles and power of the shot
+ *  Shoot() Func
+ *  Perform shooting action of ball given position, horizontal angle, vertical angle, and power
+ *  Accounts for bouncing, rolling, friction, and energy loss
+ *  Calculates if shot is a goal, miss, or hits the post/crossbar
  */
 func (f Field) Shoot(
 	pos Position,
@@ -104,7 +106,7 @@ func (f Field) Shoot(
 	min_y := (f.BALL_DIAMETER / 2)
 	max_x := (f.FIELD_WIDTH / 2) + (f.NET_WIDTH / 2) - (f.BALL_DIAMETER / 2)
 	min_x := (f.FIELD_WIDTH / 2) - (f.NET_WIDTH / 2) + (f.BALL_DIAMETER / 2)
-	max_duration := 2.1
+	max_duration := 2.1 // 0.6 seconds to react + 1.5 seconds to act and save shot
 
 	// Calculate ball position at goal line
 	gravity := -32.17
@@ -132,56 +134,57 @@ func (f Field) Shoot(
 		fmt.Printf("	Path Equation: (%ft,(%ft - 16.085t^2)) %f\n\n", velocity_x, velocity_y, duration)
 	}
 
-	// Determine if ball bounces or rolls during shot
+	// Determine if ball bounces or rolls during shot (WIP)
 	if height < min_y && duration < max_duration*3 {
 
 		// Helper vars for bounces and rolling
 		new_duration := 0.0
+		current_distance := 0.0
 		rolling := false
-		coeff_restitution := 0.8
+		coeff_restitution_y := 0.8
+		coeff_restitution_x := 0.95
 		coeff_friction := 0.55
 
 		// Calculate bounces
 		if debug {
 			fmt.Println("===BOUNCE CALCULATIONS===")
 		}
-		for (new_duration < duration) && !rolling {
+		for (current_distance < length) && !rolling {
 			time := (-1 * velocity_y) / (0.5 * gravity)
 			peak := (velocity_y * time / 2) + (0.5 * gravity * time * time / 4)
 			new_duration += time
-			// If crosses goal line while bouncing, update height
-			if new_duration >= duration {
-				goal_bounce_time := new_duration - duration
+			current_distance += velocity_x * time
+			if current_distance >= length {
+				// Change so its not using duration
+				goal_bounce_time := (length - (current_distance - velocity_x*time)) / velocity_x
+				new_duration += goal_bounce_time - time
 				height = (velocity_y * goal_bounce_time) + (0.5 * gravity * goal_bounce_time * goal_bounce_time)
-				if debug {
-					fmt.Printf("	Path Equation: (%ft+%f,(%ft - 16.085t^2)) %f\n", velocity_x, (new_duration-time)*velocity_x, velocity_y, time)
-				}
-				break
 			}
-			// If shot starts to roll, start rolling calculation
 			if peak <= f.BALL_DIAMETER*0.6 {
 				rolling = true
 				height = f.BALL_DIAMETER / 2
 			}
 			if debug {
-				fmt.Printf("	Path Equation: (%ft+%f,(%ft - 16.085t^2)) %f\n", velocity_x, (new_duration-time)*velocity_x, velocity_y, time)
+				fmt.Printf("	Path Equation: (%ft+%f,(%ft - 16.085t^2)) %f\n", velocity_x, current_distance-(velocity_x*time), velocity_y, time)
 			}
 			// Update velocity after bounce
-			velocity_y *= coeff_restitution
+			velocity_y *= coeff_restitution_y
+			velocity_x *= coeff_restitution_x
 		}
 		if debug {
-			fmt.Printf("	New height with bounces: %f\n\n", height)
+			fmt.Printf("	New height with bounces  : %f\n", height)
+			fmt.Printf("	Current dist with bounces: %f\n\n", current_distance)
 		}
 
 		// Calculate duration for rolling
-		if rolling {
+		if (current_distance < length) && rolling {
 			/* Derivation for time
 			 * vf^2 = vi^2 + 2ad
 			 * vf = sqrt(vi^2 + 2ad)
 			 * vf = vi + at
 			 * t = (sqrt(vi^2 + 2ad)-vi / a)
 			 */
-			roll_distance := length - (velocity_x * new_duration)
+			roll_distance := length - current_distance
 			final_vel := math.Sqrt(velocity_x*velocity_x + (2 * coeff_friction * gravity * roll_distance))
 			test_time := (final_vel - velocity_x) / (coeff_friction * gravity)
 			new_duration += test_time
