@@ -42,10 +42,6 @@ func (net *Network) Predict(input []float64) []float64 {
 	return result
 }
 
-// func (net *Network) Fit(env game.Environment, epochs int, learning_rate float64) {
-
-// }
-
 func (net *Network) Fit(x_train, y_train [][]float64, epochs int, learning_rate float64) {
 
 	start := time.Now()

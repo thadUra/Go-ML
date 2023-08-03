@@ -1,6 +1,7 @@
 package soccer
 
 import (
+	"Soccer-Penalty-Kick-ML-Threading/nn"
 	"errors"
 	"math"
 	"math/rand"
@@ -18,6 +19,7 @@ type Soccer struct {
 	OBSERVATION_SIZE  int
 	ACTION_SPACE      [][]float64
 	OBSERVATION_SPACE [][]float64
+	shotModel         *nn.Network
 }
 
 /**
@@ -35,6 +37,7 @@ func InitSoccer() Soccer {
 	env.ACTION_SPACE = append(env.ACTION_SPACE, []float64{0, 8})
 	env.OBSERVATION_SPACE = append(env.OBSERVATION_SPACE, []float64{0, float64(env.field.FIELD_WIDTH)})
 	env.OBSERVATION_SPACE = append(env.OBSERVATION_SPACE, []float64{0, float64(env.field.FIELD_HEIGHT)})
+	env.shotModel = nil
 	return env
 }
 
@@ -48,17 +51,31 @@ func (scr *Soccer) Step(
 
 	// Perform action (WIP WITH MANUAL SHOT PARAMS)
 	if action[0] == 0 {
-		action := []float64{-25.0 * math.Pi / 180.0, 10.0 * math.Pi / 180.0, 35.0}
+		// Get shot params from clustering ml model if initialized
+		var action []float64
+		if scr.shotModel != nil {
+			return -1, true, errors.New("soccer.Step: shot model not initialized")
+		} else {
+			action = []float64{-18.0 * math.Pi / 180.0, 10.0 * math.Pi / 180.0, 35.0} // Manual pararms temporarily
+			// action = []float64{
+			// 	((rand.Float64() * 160) - 80) * math.Pi / 180.0,
+			// 	(rand.Float64() * 90) * math.Pi / 180.0,
+			// 	rand.Float64() * 150.0} // Random params temporarily
+		}
+		// Check errors with any model prediction
+
 		result, err := scr.field.Shoot(scr.pos, action, false)
 		if err != nil {
 			return -1, true, err
 		} else {
 			if result == "GOAL" {
-				return 100, true, nil
+				return 500, true, nil
+			} else if result == "SAVED" {
+				return 50, true, nil
 			} else if result == "POST" || result == "CROSSBAR" {
-				return 0, true, nil
+				return 25, true, nil
 			} else {
-				return -50, true, nil
+				return -500, true, nil
 			}
 		}
 	} else {
@@ -82,7 +99,7 @@ func (scr *Soccer) Step(
 		}
 		// Check if position is out of bounds
 		if scr.pos.OutOfBounds(scr.field) {
-			return -100, true, nil
+			return -500, true, nil
 		}
 		return 1, false, nil
 	}

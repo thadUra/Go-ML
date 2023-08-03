@@ -42,7 +42,7 @@ func GenerateField(
 		f.FIELD_WIDTH = 224.0
 		f.NET_WIDTH = 24.0
 		f.NET_HEIGHT = 8.0
-		f.NET_DIAMETER = 2.0 / 3.0
+		f.NET_DIAMETER = 1.0 / 3.0
 		f.BALL_WEIGHT = 430.0
 		f.BALL_DIAMETER = 0.75
 	} else {
@@ -63,7 +63,7 @@ func GenerateField(
  */
 func (f Field) GetShotParameterLimits() [][]float64 {
 	// Min and max values for parameter
-	horizontal_angle := 90.0 * math.Pi / 180.0 // 360 degrees
+	horizontal_angle := 80.0 * math.Pi / 180.0 // 160 degrees
 	vertical_angle := 90.0 * math.Pi / 180.0   // 90 degrees
 	power := 150.0                             // feet per second
 
@@ -104,7 +104,7 @@ func (f Field) Shoot(
 	min_y := (f.BALL_DIAMETER / 2)
 	max_x := (f.FIELD_WIDTH / 2) + (f.NET_WIDTH / 2) - (f.BALL_DIAMETER / 2)
 	min_x := (f.FIELD_WIDTH / 2) - (f.NET_WIDTH / 2) + (f.BALL_DIAMETER / 2)
-	max_duration := 2.0
+	max_duration := 2.1
 
 	// Calculate ball position at goal line
 	gravity := -32.17
@@ -133,15 +133,76 @@ func (f Field) Shoot(
 	}
 
 	// Determine if ball bounces or rolls during shot
-	if height < min_y {
+	if height < min_y && duration < max_duration*3 {
+
+		// Helper vars for bounces and rolling
+		new_duration := 0.0
+		rolling := false
+		coeff_restitution := 0.8
+		coeff_friction := 0.55
+
 		// Calculate bounces
+		if debug {
+			fmt.Println("===BOUNCE CALCULATIONS===")
+		}
+		for (new_duration < duration) && !rolling {
+			time := (-1 * velocity_y) / (0.5 * gravity)
+			peak := (velocity_y * time / 2) + (0.5 * gravity * time * time / 4)
+			new_duration += time
+			// If crosses goal line while bouncing, update height
+			if new_duration >= duration {
+				goal_bounce_time := new_duration - duration
+				height = (velocity_y * goal_bounce_time) + (0.5 * gravity * goal_bounce_time * goal_bounce_time)
+				if debug {
+					fmt.Printf("	Path Equation: (%ft+%f,(%ft - 16.085t^2)) %f\n", velocity_x, (new_duration-time)*velocity_x, velocity_y, time)
+				}
+				break
+			}
+			// If shot starts to roll, start rolling calculation
+			if peak <= f.BALL_DIAMETER*0.6 {
+				rolling = true
+				height = f.BALL_DIAMETER / 2
+			}
+			if debug {
+				fmt.Printf("	Path Equation: (%ft+%f,(%ft - 16.085t^2)) %f\n", velocity_x, (new_duration-time)*velocity_x, velocity_y, time)
+			}
+			// Update velocity after bounce
+			velocity_y *= coeff_restitution
+		}
+		if debug {
+			fmt.Printf("	New height with bounces: %f\n\n", height)
+		}
 
-		// Calculate rolling
+		// Calculate duration for rolling
+		if rolling {
+			/* Derivation for time
+			 * vf^2 = vi^2 + 2ad
+			 * vf = sqrt(vi^2 + 2ad)
+			 * vf = vi + at
+			 * t = (sqrt(vi^2 + 2ad)-vi / a)
+			 */
+			roll_distance := length - (velocity_x * new_duration)
+			final_vel := math.Sqrt(velocity_x*velocity_x + (2 * coeff_friction * gravity * roll_distance))
+			test_time := (final_vel - velocity_x) / (coeff_friction * gravity)
+			new_duration += test_time
+			if debug {
+				fmt.Println("===ROLL CALCULATIONS===")
+				fmt.Printf("	ROLL DIST: %f\n", roll_distance)
+				fmt.Printf("	FINAL VEL: %f\n", final_vel)
+				fmt.Printf("	ROLL TIME: %f\n\n", test_time)
+			}
+		}
 
-		// Calculate new height and duration of shot
+		// Update duration after bouncing and rolling
+		if debug {
+			fmt.Println("===DURATION CALCULATIONS===")
+			fmt.Printf("	Old Duration: %f\n", duration)
+			fmt.Printf("	New Duration: %f\n\n", new_duration)
+		}
+		duration = new_duration
 	}
 
-	// Determine result
+	// Determine result if GOAL, SAVED, CROSSBAR, POST, or MISS
 	if height >= min_y &&
 		height <= max_y &&
 		width >= min_x &&
@@ -151,61 +212,17 @@ func (f Field) Shoot(
 		} else {
 			return "SAVED", nil
 		}
+	} else if width >= min_x &&
+		width <= max_x &&
+		height >= min_y &&
+		height <= (max_y+f.NET_DIAMETER+f.BALL_DIAMETER) {
+		return "CROSSBAR", nil
+	} else if height >= min_y &&
+		height <= max_y &&
+		((width <= max_x && width >= (min_x-f.NET_DIAMETER-f.BALL_DIAMETER)) ||
+			(width >= min_x && width <= (max_x+f.NET_DIAMETER+f.BALL_DIAMETER))) {
+		return "POST", nil
 	} else {
 		return "MISS", nil
 	}
-
-	// Determine physics for bounce on ground (WIP)
-	// rolling := false
-	// coeff_restitution := 0.8
-	// current_vel_y := velocity_y
-	// bounceDuration := 0.0
-	// if height < 0 && duration < 7 {
-	// 	if print {
-	// 		fmt.Println("===BOUNCE CALCULATIONS===")
-	// 	}
-	// 	peak := f.BALL_DIAMETER + 1
-	// 	goal_bounce_time := 0.0
-	// 	for (bounceDuration < duration) && (peak > f.BALL_DIAMETER*0.6) {
-	// 		time := (-1 * current_vel_y) / (0.5 * gravity)
-	// 		peak = (current_vel_y * time / 2) + (0.5 * gravity * time * time / 4)
-	// 		bounceDuration += time
-	// 		if bounceDuration >= duration {
-	// 			goal_bounce_time = bounceDuration - duration
-	// 		}
-	// 		if peak <= f.BALL_DIAMETER*0.6 {
-	// 			rolling = true
-	// 			height = f.BALL_DIAMETER / 2
-	// 		}
-	// 		if print {
-	// 			fmt.Printf("	Path Equation: (%ft+%f,(%ft - 16.085t^2)) %f\n", velocity_x, (bounceDuration-time)*velocity_x, current_vel_y, time)
-	// 		}
-	// 		current_vel_y *= coeff_restitution
-	// 	}
-	// 	bounceHeight := (current_vel_y * goal_bounce_time) + (0.5 * gravity * goal_bounce_time * goal_bounce_time)
-	// 	if print {
-	// 		fmt.Printf("	New height with bounces: %f\n\n", bounceHeight)
-	// 	}
-	// }
-
-	// // Determine physics for rolling (WIP)
-	// roll_duration := 0.0
-	// if rolling && bounceDuration < duration {
-	// 	roll_distance := length - (velocity_x * bounceDuration)
-	// 	roll_velocity_x := velocity_x
-	// 	for roll_duration < 5 && roll_distance > 0 {
-	// 		roll_distance -= roll_velocity_x
-	// 		if roll_distance <= 0 {
-	// 			roll_duration += (roll_distance + roll_velocity_x) / roll_velocity_x
-	// 		}
-	// 		roll_velocity_x *= 0.9
-	// 		roll_duration++
-	// 	}
-	// }
-	// if print {
-	// 	fmt.Println("===DURATION CALCULATIONS===")
-	// 	fmt.Printf("	Old Duration: %f\n", duration)
-	// 	fmt.Printf("	New Duration: %f\n\n", roll_duration+bounceDuration)
-	// }
-	// duration = roll_duration + bounceDuration
 }

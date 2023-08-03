@@ -8,7 +8,7 @@ import (
 )
 
 /**
- * RunXorTest()
+ * TestXorNeuralNetwork()
  * Creates a simple neural network to train for XOR operations
  * Tests the nn package on a baseline level
  */

@@ -6,6 +6,8 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+// add hmse, rmse, mae, huber
+
 func Mse(y_true, y_pred *mat.Dense) float64 {
 	ret := mat.DenseCopyOf(y_true)
 	ret.Sub(y_true, y_pred)
