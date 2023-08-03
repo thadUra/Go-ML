@@ -20,7 +20,7 @@ type Network struct {
 }
 
 /**
- * AddLayer() WIP
+ * AddLayer()
  * Adds specific layer to neural network given activation type and input/output neuron dimensions
  */
 func (net *Network) AddLayer(layerType, activationType string, input_nodes, output_nodes int) {
@@ -30,31 +30,29 @@ func (net *Network) AddLayer(layerType, activationType string, input_nodes, outp
 	// Get layerType
 	switch layerType {
 	case "DENSE":
-		layer = Layer(InitFCLayer(input_nodes, output_nodes))
+		layer = Layer(InitDenseLayer(input_nodes, output_nodes))
 	case "FLATTEN":
-		layer = Layer(InitFCLayer(input_nodes, output_nodes)) // CHANGE ONCE IMPLEMENTED
+		layer = Layer(InitFlattenLayer(input_nodes, output_nodes))
 	case "CONVOLUTIONAL":
-		layer = Layer(InitFCLayer(input_nodes, output_nodes)) // CHANGE ONCE IMPLEMENTED
+		layer = Layer(InitConvolutionalLayer(input_nodes, output_nodes))
 	default:
-		layer = Layer(InitFCLayer(input_nodes, output_nodes))
+		layer = Layer(InitDenseLayer(input_nodes, output_nodes))
 	}
 
 	// Get activationType
 	switch activationType {
 	case "TANH":
-		activation = Layer(InitActivationLayer(Tanh, TanhPrime))
+		activation = Layer(InitActivationLayer(Tanh, TanhDeriv))
 	case "SIGMOID":
-		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
+		activation = Layer(InitActivationLayer(Sigmoid, SigmoidDeriv))
 	case "RELU":
-		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
+		activation = Layer(InitActivationLayer(ReLu, ReLuDeriv))
 	case "ARCTAN":
-		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
-	case "SOFTPLUS":
-		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
+		activation = Layer(InitActivationLayer(Arctan, ArctanDeriv))
 	case "GAUSSIAN":
-		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
+		activation = Layer(InitActivationLayer(Gaussian, GaussianDeriv))
 	default:
-		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED (linear)
+		activation = Layer(InitActivationLayer(Linear, LinearDeriv))
 	}
 
 	// Add layers to network
@@ -122,44 +120,50 @@ func (net *Network) Predict(input [][]float64) [][]float64 {
 
 /**
  * Fit()
- *
+ * Fit the neural network given training data, number of epochs, and a learning rate
+ * Debug option provided for printing data from each epoch
  */
-func (net *Network) Fit(x_train, y_train [][]float64, epochs int, learning_rate float64) {
-
-	// record training time
+func (net *Network) Fit(x_train, y_train [][]float64, epochs int, learning_rate float64, debug bool) {
+	// Record training duration
 	start := time.Now()
 
-	// sample dimensions
-	samples := len(x_train)
-
-	// training loop
+	// Training loop
 	for i := 0; i < epochs; i++ {
 		err := 0.0
 		for j := range x_train {
-
-			// forward propagation
+			// Forward propagation
 			output := mat.NewDense(1, len(x_train[j]), x_train[j])
 			for l := range net.LAYERS {
 				output = (*net.LAYERS[l]).ForwardPropagation(output)
 			}
+			// Convert output to matrix for loss computation
 			reference := mat.NewDense(1, len(y_train[j]), y_train[j])
-
-			// compute loss
+			// Add error
 			err += net.LOSSFUNC(reference, output, net.LOSSPARAMS)
-
-			// backwards propagation
+			// Backwards propagation
 			error := net.LOSSDERIV(reference, output, net.LOSSPARAMS)
 			for l := len(net.LAYERS) - 1; l >= 0; l-- {
 				error = (*net.LAYERS[l]).BackPropagation(error, learning_rate)
 			}
 		}
-		err /= float64(samples)
-		if i < 3 || i >= epochs-3 {
+		// Adjust error
+		err /= float64(len(x_train))
+
+		// Debug statements (print first and last three epochs if not true)
+		if debug {
 			fmt.Printf("epoch %d/%d  error=%f\n", i+1, epochs, err)
-		} else if i >= 3 && i < epochs-3 && i == 4 {
-			fmt.Println("...")
+		} else {
+			if i < 3 || i >= epochs-3 {
+				fmt.Printf("epoch %d/%d  error=%f\n", i+1, epochs, err)
+			} else if i >= 3 && i < epochs-3 && i == 4 {
+				fmt.Println("...")
+			}
 		}
 	}
+
+	// Print training time
 	elapsed := time.Since(start)
-	fmt.Printf("Training Time: %s\n", elapsed)
+	if debug {
+		fmt.Printf("Training Time: %s\n", elapsed)
+	}
 }

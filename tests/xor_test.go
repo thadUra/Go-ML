@@ -21,11 +21,12 @@ func TestXorNeuralNetwork(t *testing.T) {
 	// Initialize neural network with one hidden layer and MSE loss
 	var net nn.Network
 	net.AddLayer("DENSE", "TANH", 2, 3)
-	net.AddLayer("DENSE", "TANH", 3, 1)
+	net.AddLayer("DENSE", "SIGMOID", 3, 3)
+	net.AddLayer("DENSE", "ARCTAN", 3, 1)
 	net.SetLoss("HUBER", []float64{1.35})
 
 	// Train the model and display results
-	net.Fit(x_train, y_train, 1000, 0.1)
+	net.Fit(x_train, y_train, 1000, 0.1, true)
 	result := net.Predict(x_train)
 	for i := range result {
 		fmt.Printf("%d: %f, %f\n", i, result[i][0], y_train[i][0])

@@ -94,6 +94,7 @@ func MaeDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 /**
  * Huber Loss Functions
  * Implements a pseudo-huber loss type to approximate
+ * Takes in a delta value as a parameter
  */
 func Huber(y_true, y_pred *mat.Dense, params []float64) float64 {
 	ret := mat.DenseCopyOf(y_true)
