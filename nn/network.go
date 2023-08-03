@@ -7,6 +7,11 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+/**
+ * Network Struct
+ * Contains neural network specifics and helper functions
+ * Defines layers and loss functions
+ */
 type Network struct {
 	LAYERS     []*Layer
 	LOSSFUNC   func(y_true, y_pred *mat.Dense, params []float64) float64
@@ -14,10 +19,54 @@ type Network struct {
 	LOSSPARAMS []float64
 }
 
-func (net *Network) AddLayer(layer Layer) {
+/**
+ * AddLayer() WIP
+ * Adds specific layer to neural network given activation type and input/output neuron dimensions
+ */
+func (net *Network) AddLayer(layerType, activationType string, input_nodes, output_nodes int) {
+	var layer Layer
+	var activation Layer
+
+	// Get layerType
+	switch layerType {
+	case "DENSE":
+		layer = Layer(InitFCLayer(input_nodes, output_nodes))
+	case "FLATTEN":
+		layer = Layer(InitFCLayer(input_nodes, output_nodes)) // CHANGE ONCE IMPLEMENTED
+	case "CONVOLUTIONAL":
+		layer = Layer(InitFCLayer(input_nodes, output_nodes)) // CHANGE ONCE IMPLEMENTED
+	default:
+		layer = Layer(InitFCLayer(input_nodes, output_nodes))
+	}
+
+	// Get activationType
+	switch activationType {
+	case "TANH":
+		activation = Layer(InitActivationLayer(Tanh, TanhPrime))
+	case "SIGMOID":
+		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
+	case "RELU":
+		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
+	case "ARCTAN":
+		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
+	case "SOFTPLUS":
+		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
+	case "GAUSSIAN":
+		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED
+	default:
+		activation = Layer(InitActivationLayer(Tanh, TanhPrime)) // CHANGE ONCE IMPLEMENTED (linear)
+	}
+
+	// Add layers to network
 	net.LAYERS = append(net.LAYERS, &layer)
+	net.LAYERS = append(net.LAYERS, &activation)
 }
 
+/**
+ * SetLoss()
+ * Contains neural network specifics and helper functions
+ * Defines layers and loss functions
+ */
 func (net *Network) SetLoss(lossType string, params []float64) {
 	net.LOSSPARAMS = params
 	switch lossType {
@@ -42,21 +91,39 @@ func (net *Network) SetLoss(lossType string, params []float64) {
 	}
 }
 
-func (net *Network) Predict(input []float64) []float64 {
-	output := mat.NewDense(1, len(input), input)
-	for i := range net.LAYERS {
-		output = (*net.LAYERS[i]).ForwardPropagation(output)
-	}
-	rows, cols := output.Dims()
-	result := make([]float64, rows*cols)
-	for r := 0; r < rows; r++ {
-		for c := 0; c < cols; c++ {
-			result[(cols*r)+c] = output.At(r, c)
+/**
+ * Predict()
+ * Given sample data, return predicted values ran through the neural network
+ */
+func (net *Network) Predict(input [][]float64) [][]float64 {
+	// Init result and sample size
+	var result [][]float64
+	size := len(input)
+
+	// Run model on each input sample
+	for i := 0; i < size; i++ {
+		// Propagate forward
+		output := mat.NewDense(1, len(input[i]), input[i])
+		for j := range net.LAYERS {
+			output = (*net.LAYERS[j]).ForwardPropagation(output)
 		}
+		// Append result for iteration
+		rows, cols := output.Dims()
+		temp := make([]float64, rows*cols)
+		for r := 0; r < rows; r++ {
+			for c := 0; c < cols; c++ {
+				temp[(cols*r)+c] = output.At(r, c)
+			}
+		}
+		result = append(result, temp)
 	}
 	return result
 }
 
+/**
+ * Fit()
+ *
+ */
 func (net *Network) Fit(x_train, y_train [][]float64, epochs int, learning_rate float64) {
 
 	// record training time
