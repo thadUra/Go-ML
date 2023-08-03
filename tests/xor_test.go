@@ -24,7 +24,7 @@ func TestXorNeuralNetwork(t *testing.T) {
 	net.AddLayer(nn.InitActivationLayer(nn.Tanh, nn.TanhPrime))
 	net.AddLayer(nn.InitFCLayer(3, 1))
 	net.AddLayer(nn.InitActivationLayer(nn.Tanh, nn.TanhPrime))
-	net.SetLoss(nn.Mse, nn.Mse_prime)
+	net.SetLoss("HUBER", []float64{1.35})
 
 	// Train the model and display results
 	net.Fit(x_train, y_train, 1000, 0.1)
