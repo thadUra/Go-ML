@@ -23,7 +23,7 @@ type Soccer struct {
 }
 
 /**
- *  InitSoccer() Func
+ *  InitSoccer()
  *  Generates soccer env
  *  Action space conist of 9 actions: dribble in any of the 8 directions or shoot the ball
  *  Observation space consist of just the location on field
@@ -42,7 +42,7 @@ func InitSoccer() Soccer {
 }
 
 /**
- *  Step() Func
+ *  Step() WIP
  *  Performs one step in soccer environment
  *  Can either dribble or shoot ball from current position
  *  Shot parameters picked by other ml model
@@ -112,7 +112,7 @@ func (scr *Soccer) Step(
 }
 
 /**
- *  Reset() Func
+ *  Reset()
  *  Resets position to random spot on field
  */
 func (scr *Soccer) Reset() {
@@ -120,7 +120,7 @@ func (scr *Soccer) Reset() {
 }
 
 /**
- *  GetNumActions() Func
+ *  GetNumActions()
  *  Accessor for action space size
  */
 func (scr *Soccer) GetNumActions() int {
@@ -128,7 +128,7 @@ func (scr *Soccer) GetNumActions() int {
 }
 
 /**
- *  GetNumObservations() Func
+ *  GetNumObservations()
  *  Accessor for observation space size
  */
 func (scr *Soccer) GetNumObservations() int {

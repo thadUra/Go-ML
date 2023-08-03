@@ -22,7 +22,7 @@ type Field struct {
 }
 
 /**
- *  GenerateField() Func
+ *  GenerateField()
  *  Generate the field via parameters
  *  Default to fifa regulations
  */
@@ -58,7 +58,7 @@ func GenerateField(
 }
 
 /**
- *  GetShotParameterLimits() Func
+ *  GetShotParameterLimits()
  *  Return the range of horizontal/vertical angles and power of the shot
  */
 func (f Field) GetShotParameterLimits() [][]float64 {
@@ -76,7 +76,7 @@ func (f Field) GetShotParameterLimits() [][]float64 {
 }
 
 /**
- *  Shoot() Func
+ *  Shoot()
  *  Perform shooting action of ball given position, horizontal angle, vertical angle, and power
  *  Accounts for bouncing, rolling, friction, and energy loss
  *  Calculates if shot is a goal, miss, or hits the post/crossbar

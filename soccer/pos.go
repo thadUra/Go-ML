@@ -11,7 +11,7 @@ type Position struct {
 }
 
 /**
- *  GeneratePos() Func
+ *  GeneratePos()
  *  Generate a position for the shot
  *  Default to penalty shot location
  */
@@ -32,7 +32,7 @@ func GeneratePos(
 }
 
 /**
- *  OutOfBounds() Func
+ *  OutOfBounds()
  *  Determines if position is out of bounds on the field
  */
 func (pos *Position) OutOfBounds(f Field) bool {
@@ -40,7 +40,7 @@ func (pos *Position) OutOfBounds(f Field) bool {
 }
 
 /**
- *  DribbleDir() Funcs
+ *  DribbleDir()
  *  Modifier functions to assist in dribbling action
  */
 func (pos *Position) DribbleUp() {
