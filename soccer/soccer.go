@@ -134,3 +134,19 @@ func (scr *Soccer) GetNumActions() int {
 func (scr *Soccer) GetNumObservations() int {
 	return len(scr.OBSERVATION_SPACE)
 }
+
+/**
+ *  GetPos()
+ *  Accessor for position
+ */
+func (scr *Soccer) GetPos() Position {
+	return scr.pos
+}
+
+/**
+ *  GetField()
+ *  Accessor for field
+ */
+func (scr *Soccer) GetField() Field {
+	return scr.field
+}

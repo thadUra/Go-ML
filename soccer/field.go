@@ -63,9 +63,9 @@ func GenerateField(
  */
 func (f Field) GetShotParameterLimits() [][]float64 {
 	// Min and max values for parameter
-	horizontal_angle := 80.0 * math.Pi / 180.0 // 160 degrees
-	vertical_angle := 90.0 * math.Pi / 180.0   // 90 degrees
-	power := 150.0                             // feet per second
+	horizontal_angle := 80.0 // 160 degrees
+	vertical_angle := 90.0   // 90 degrees
+	power := 100.0           // feet per second
 
 	// Generate limitations
 	var limitations [][]float64

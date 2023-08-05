@@ -13,31 +13,45 @@ import (
  * Defines layers and loss functions
  */
 type Network struct {
-	LAYERS     []*Layer
-	LOSSFUNC   func(y_true, y_pred *mat.Dense, params []float64) float64
-	LOSSDERIV  func(y_true, y_pred *mat.Dense, params []float64) *mat.Dense
-	LOSSPARAMS []float64
+	LAYERS      []*Layer
+	LOSSFUNC    func(y_true, y_pred *mat.Dense, params []float64) float64
+	LOSSDERIV   func(y_true, y_pred *mat.Dense, params []float64) *mat.Dense
+	LOSSPARAMS  []float64
+	OUTPUT_SIZE int
+	LAYER_COUNT int
 }
 
 /**
  * AddLayer()
  * Adds specific layer to neural network given activation type and input/output neuron dimensions
  */
-func (net *Network) AddLayer(layerType, activationType string, input_nodes, output_nodes int) {
+func (net *Network) AddLayer(layerType, activationType string, output_nodes int) {
 	var layer Layer
 	var activation Layer
 
 	// Get layerType
 	switch layerType {
+	case "INPUT":
+		net.OUTPUT_SIZE = output_nodes
+		return
 	case "DENSE":
-		layer = Layer(InitDenseLayer(input_nodes, output_nodes))
+		layer = Layer(InitDenseLayer(net.OUTPUT_SIZE, output_nodes))
 	case "FLATTEN":
-		layer = Layer(InitFlattenLayer(input_nodes, output_nodes))
+		if net.LAYER_COUNT == 0 {
+			net.OUTPUT_SIZE = output_nodes
+			return
+		}
+		flat := InitFlattenLayer(net.OUTPUT_SIZE, output_nodes)
+		layer = Layer(flat)
+		net.LAYERS = append(net.LAYERS, &layer)
+		_, net.OUTPUT_SIZE = flat.GetShape()
+		return
 	case "CONVOLUTIONAL":
-		layer = Layer(InitConvolutionalLayer(input_nodes, output_nodes))
+		layer = Layer(InitConvolutionalLayer(net.OUTPUT_SIZE, output_nodes))
 	default:
-		layer = Layer(InitDenseLayer(input_nodes, output_nodes))
+		layer = Layer(InitDenseLayer(net.OUTPUT_SIZE, output_nodes))
 	}
+	net.OUTPUT_SIZE = output_nodes
 
 	// Get activationType
 	switch activationType {

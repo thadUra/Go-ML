@@ -6,7 +6,7 @@ import (
 
 /**
  * ConvolutionalLayer Struct
- *
+ * WIP
  */
 type ConvolutionalLayer struct {
 	INPUT  *mat.Dense
@@ -15,12 +15,10 @@ type ConvolutionalLayer struct {
 
 /**
  * InitConvolutionalLayer()
- *
+ * WIP
  */
 func InitConvolutionalLayer(input_size int, output_size int) *ConvolutionalLayer {
-	// Initialize
-
-	// Return layer
+	// Initialize and return
 	var layer ConvolutionalLayer
 	return &layer
 }
@@ -28,7 +26,7 @@ func InitConvolutionalLayer(input_size int, output_size int) *ConvolutionalLayer
 /**
  * ForwardPropagation()
  * Performs forward propagation for a convolutional layer required by Layer interface
- *
+ * WIP
  */
 func (layer *ConvolutionalLayer) ForwardPropagation(input *mat.Dense) *mat.Dense {
 
@@ -38,7 +36,7 @@ func (layer *ConvolutionalLayer) ForwardPropagation(input *mat.Dense) *mat.Dense
 /**
  * BackPropagation()
  * Performs back propagation for a convolutional layer required by Layer interface
- *
+ * WIP
  */
 func (layer *ConvolutionalLayer) BackPropagation(output_error *mat.Dense, learning_rate float64) *mat.Dense {
 

@@ -1,4 +1,4 @@
-package soccer_ml
+package go_ml
 
 /**
  * Links:
