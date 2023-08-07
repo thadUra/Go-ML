@@ -1,0 +1,3 @@
+# Soccer Environment Package
+
+WIP

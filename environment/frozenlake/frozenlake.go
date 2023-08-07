@@ -1,0 +1,203 @@
+package frozenlake
+
+import (
+	"Soccer-Penalty-Kick-ML-Threading/environment"
+	"errors"
+	"fmt"
+	"math"
+	"math/rand"
+)
+
+/**
+ *  FrozenLake Struct
+ *  Implements environment interface
+ */
+type FrozenLake struct {
+	CURRENT_STATE     int
+	SLIPPERY          bool
+	ROWS              int
+	COLS              int
+	ACTION_SIZE       int
+	OBSERVATION_SIZE  int
+	ACTION_SPACE      []int
+	OBSERVATION_SPACE []string
+}
+
+/**
+ *  InitFrozenLake()
+ *  Generates frozenlake env
+ */
+func InitFrozenLake(rows, cols int, hole_multiplier float64, slippery bool) environment.Environment {
+	var env FrozenLake
+	env.CURRENT_STATE = 0
+	env.SLIPPERY = slippery
+	env.ROWS = rows
+	env.COLS = cols
+	env.ACTION_SIZE = 1
+	env.OBSERVATION_SIZE = 1
+	env.ACTION_SPACE = []int{0, 1, 2, 3}
+	env.OBSERVATION_SPACE = make([]string, rows*cols)
+
+	// Generate map for S: start, G: goal, F: frozen, H: hole
+	valid_map := false
+	count, max_attempts := 0, 25
+	for !valid_map && count < max_attempts {
+		total_holes := 0
+		max_holes := math.Sqrt(float64(rows * cols))
+		for i := 0; i < rows*cols; i++ {
+			if i == 0 {
+				env.OBSERVATION_SPACE[i] = "S"
+			} else if i == rows*cols-1 {
+				env.OBSERVATION_SPACE[i] = "G"
+			} else {
+				if total_holes < int(max_holes) && rand.Float64() < hole_multiplier*max_holes/float64(rows*cols) {
+					env.OBSERVATION_SPACE[i] = "H"
+				} else {
+					env.OBSERVATION_SPACE[i] = "F"
+				}
+			}
+		}
+		// Check if path exists using BFS
+		queue := make([]int, 0)
+		visited := make([]bool, rows*cols)
+		queue = append(queue, 0)
+		for len(queue) != 0 {
+			top := queue[0]
+			if visited[top] {
+				queue = queue[1:]
+			} else {
+				r, c := int(float64(top)/float64(cols)), top%cols
+				if r-1 >= 0 && env.OBSERVATION_SPACE[top-cols] != "H" {
+					queue = append(queue, top-cols)
+				}
+				if r+1 < rows && env.OBSERVATION_SPACE[top+cols] != "H" {
+					queue = append(queue, top+cols)
+				}
+				if c-1 >= 0 && env.OBSERVATION_SPACE[top-1] != "H" {
+					queue = append(queue, top-1)
+				}
+				if c+1 < cols && env.OBSERVATION_SPACE[top+1] != "H" {
+					queue = append(queue, top+1)
+				}
+				visited[top] = true
+			}
+		}
+		if visited[rows*cols-1] {
+			valid_map = true
+		}
+		count++
+	}
+	// Print map
+	fmt.Println("===MAP LAYOUT===")
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			fmt.Printf("%s ", env.OBSERVATION_SPACE[r*cols+c])
+		}
+		fmt.Println("")
+	}
+	fmt.Println("===END MAP LAYOUT===")
+	return environment.Environment(&env)
+}
+
+/**
+ *  Step() WIP
+ *  Performs one step in frozenlake environment
+ *  If slippery, it will move in intended direction with probability of 1/3
+ */
+func (frzn *FrozenLake) Step(
+	action []float64,
+) (float64, float64, bool, error) {
+	// Check dimensions
+	if len(action) > 1 || len(action) == 0 {
+		return -1, -1, true, errors.New("FrozenLake.Step: action dimensions are incorrect")
+	}
+	value := int(action[0])
+
+	// Perform action for left: 0, down: 1, right: 2, up: 3
+	r, c := int(frzn.CURRENT_STATE/frzn.COLS), frzn.CURRENT_STATE%frzn.COLS
+	if frzn.SLIPPERY {
+		option := int(rand.Float64() * 3)
+		if value == 0 {
+			if option == 0 && c-1 >= 0 {
+				frzn.CURRENT_STATE--
+			} else if option == 1 && r+1 < frzn.ROWS {
+				frzn.CURRENT_STATE += frzn.COLS
+			} else if option == 2 && r-1 >= 0 {
+				frzn.CURRENT_STATE -= frzn.COLS
+			}
+		} else if value == 1 {
+			if option == 0 && r+1 < frzn.ROWS {
+				frzn.CURRENT_STATE += frzn.COLS
+			} else if option == 1 && c-1 >= 0 {
+				frzn.CURRENT_STATE--
+			} else if option == 2 && c+1 < frzn.COLS {
+				frzn.CURRENT_STATE++
+			}
+		} else if value == 2 {
+			if option == 0 && c+1 < frzn.COLS {
+				frzn.CURRENT_STATE++
+			} else if option == 1 && r+1 < frzn.ROWS {
+				frzn.CURRENT_STATE += frzn.COLS
+			} else if option == 2 && r-1 >= 0 {
+				frzn.CURRENT_STATE -= frzn.COLS
+			}
+		} else if value == 3 {
+			if option == 0 && r-1 >= 0 {
+				frzn.CURRENT_STATE -= frzn.COLS
+			} else if option == 1 && c-1 >= 0 {
+				frzn.CURRENT_STATE--
+			} else if option == 2 && c+1 < frzn.COLS {
+				frzn.CURRENT_STATE++
+			}
+		}
+	} else {
+		if value == 0 && c-1 >= 0 {
+			frzn.CURRENT_STATE--
+		} else if value == 1 && r+1 < frzn.ROWS {
+			frzn.CURRENT_STATE += frzn.COLS
+		} else if value == 2 && c+1 < frzn.COLS {
+			frzn.CURRENT_STATE++
+		} else if value == 3 && r-1 >= 0 {
+			frzn.CURRENT_STATE -= frzn.COLS
+		}
+	}
+	// Get reward and check if done
+	var reward float64
+	var done bool
+	if frzn.OBSERVATION_SPACE[frzn.CURRENT_STATE] == "G" {
+		reward = 1.0
+		done = true
+	} else {
+		reward = 0
+		done = false
+	}
+	if frzn.OBSERVATION_SPACE[frzn.CURRENT_STATE] == "H" {
+		done = true
+	}
+	return float64(frzn.CURRENT_STATE), reward, done, nil
+}
+
+/**
+ *  Reset()
+ *  Set state to zero to reset (start is always at zero)
+ */
+func (frzn *FrozenLake) Reset() float64 {
+	frzn.CURRENT_STATE = 0
+	return 0.0
+}
+
+/**
+ *  GetNumActions()
+ *  Accessor for action space size
+ */
+func (frzn *FrozenLake) GetNumActions() int {
+	return len(frzn.ACTION_SPACE)
+}
+
+/**
+ *  GetNumObservations()
+ *  Accessor for observation space size
+ */
+func (frzn *FrozenLake) GetNumObservations() int {
+	return len(frzn.OBSERVATION_SPACE)
+}

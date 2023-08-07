@@ -119,6 +119,10 @@ func (f Field) Shoot(
 
 	// Print statements
 	if debug {
+		fmt.Println("===PARAMETERS===")
+		fmt.Printf("	Horiz   : %f\n", horizontal_angle)
+		fmt.Printf("	Vertical: %f\n", vertical_angle)
+		fmt.Printf("	Power   : %f\n", power)
 		fmt.Println("===SHOT CALCULATIONS===")
 		fmt.Printf("	Len     : %f\n", length)
 		fmt.Printf("	Vel_X   : %f\n", velocity_x)

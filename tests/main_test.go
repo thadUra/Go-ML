@@ -1,15 +1,16 @@
 package tests
 
 import (
-	"Soccer-Penalty-Kick-ML-Threading/soccer"
+	"Soccer-Penalty-Kick-ML-Threading/environment/soccer"
 	"fmt"
 	"testing"
 )
 
 func TestMain(t *testing.T) {
 	env := soccer.InitSoccer()
+	_ = env.Reset()
 	action := []float64{0}
-	reward, done, _ := env.Step(action)
+	_, reward, done, _ := env.Step(action)
 	fmt.Printf("%f, %t\n", reward, done)
 
 	// Test 1000000 Shots

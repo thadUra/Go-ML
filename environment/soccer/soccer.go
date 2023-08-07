@@ -1,10 +1,10 @@
 package soccer
 
 import (
+	"Soccer-Penalty-Kick-ML-Threading/environment"
 	"Soccer-Penalty-Kick-ML-Threading/nn"
 	"errors"
 	"math"
-	"math/rand"
 )
 
 /**
@@ -28,17 +28,17 @@ type Soccer struct {
  *  Action space conist of 9 actions: dribble in any of the 8 directions or shoot the ball
  *  Observation space consist of just the location on field
  */
-func InitSoccer() Soccer {
+func InitSoccer() environment.Environment {
 	var env Soccer
 	env.pos = GeneratePos(0, 0, true)
 	env.field = GenerateField(0, 0, 0, 0, 0, 0, 0, true)
 	env.ACTION_SIZE = 1
 	env.OBSERVATION_SIZE = 2
-	env.ACTION_SPACE = append(env.ACTION_SPACE, []float64{0, 8})
+	env.ACTION_SPACE = append(env.ACTION_SPACE, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8})
 	env.OBSERVATION_SPACE = append(env.OBSERVATION_SPACE, []float64{0, float64(env.field.FIELD_WIDTH)})
 	env.OBSERVATION_SPACE = append(env.OBSERVATION_SPACE, []float64{0, float64(env.field.FIELD_HEIGHT)})
 	env.shotModel = nil
-	return env
+	return environment.Environment(&env)
 }
 
 /**
@@ -49,10 +49,13 @@ func InitSoccer() Soccer {
  */
 func (scr *Soccer) Step(
 	action []float64,
-) (float64, bool, error) {
+) (float64, float64, bool, error) {
+	// Current state
+	state := scr.OBSERVATION_SPACE[0][1]*scr.pos.DISTANCE_Y + scr.pos.DISTANCE_X
+
 	// Check dimensions
 	if len(action) > 1 {
-		return -1, true, errors.New("soccer.Step: action dimensions are incorrect")
+		return state, -1, true, errors.New("soccer.Step: action dimensions are incorrect")
 	}
 
 	// Perform action (WIP WITH MANUAL SHOT PARAMS)
@@ -60,28 +63,26 @@ func (scr *Soccer) Step(
 		// Get shot params from ml model if initialized
 		var action []float64
 		if scr.shotModel != nil {
-			return -1, true, errors.New("soccer.Step: shot model not initialized")
+			return state, -1, true, errors.New("soccer.Step: shot model not initialized")
 		} else {
-			action = []float64{-15.0 * math.Pi / 180.0, 25.0 * math.Pi / 180.0, 25.0} // Manual pararms temporarily
-			// action = []float64{
-			// 	((rand.Float64() * 160) - 80) * math.Pi / 180.0,
-			// 	(rand.Float64() * 90) * math.Pi / 180.0,
-			// 	rand.Float64() * 150.0} // Random params temporarily
+			// Manually shoot between posts at half power
+			width_angle := math.Atan(((scr.GetField().FIELD_WIDTH / 2) - scr.GetPos().DISTANCE_X) / scr.GetPos().DISTANCE_Y)
+			action = []float64{width_angle, 10.0 * math.Pi / 180.0, 30}
 		}
 		// Check errors with any model prediction
 
-		result, err := scr.field.Shoot(scr.pos, action, true)
+		result, err := scr.field.Shoot(scr.pos, action, false)
 		if err != nil {
-			return -1, true, err
+			return state, -1, true, err
 		} else {
 			if result == "GOAL" {
-				return 500, true, nil
+				return state, 1000, true, nil
 			} else if result == "SAVED" {
-				return 50, true, nil
+				return state, 0, true, nil
 			} else if result == "POST" || result == "CROSSBAR" {
-				return 25, true, nil
+				return state, 0, true, nil
 			} else {
-				return -500, true, nil
+				return state, 0, true, nil
 			}
 		}
 	} else {
@@ -105,9 +106,11 @@ func (scr *Soccer) Step(
 		}
 		// Check if position is out of bounds
 		if scr.pos.OutOfBounds(scr.field) {
-			return -500, true, nil
+			// fmt.Printf("	OUT OF BOUNDS AT (%f,%f)\n", scr.pos.DISTANCE_X, scr.pos.DISTANCE_Y)
+			return state, 0, true, nil
 		}
-		return 1, false, nil
+		state = scr.OBSERVATION_SPACE[0][1]*scr.pos.DISTANCE_Y + scr.pos.DISTANCE_X
+		return state, 0, false, nil
 	}
 }
 
@@ -115,8 +118,10 @@ func (scr *Soccer) Step(
  *  Reset()
  *  Resets position to random spot on field
  */
-func (scr *Soccer) Reset() {
-	scr.pos = GeneratePos(rand.Float64()*scr.field.FIELD_HEIGHT, rand.Float64()*scr.field.FIELD_WIDTH, false)
+func (scr *Soccer) Reset() float64 {
+	scr.pos = GeneratePos(112, 250, false)
+	// scr.pos = GeneratePos(rand.Float64()*scr.field.FIELD_HEIGHT, rand.Float64()*scr.field.FIELD_WIDTH, false)
+	return scr.OBSERVATION_SPACE[0][1]*scr.pos.DISTANCE_Y + scr.pos.DISTANCE_X
 }
 
 /**
@@ -124,7 +129,7 @@ func (scr *Soccer) Reset() {
  *  Accessor for action space size
  */
 func (scr *Soccer) GetNumActions() int {
-	return len(scr.ACTION_SPACE)
+	return len(scr.ACTION_SPACE[0])
 }
 
 /**
@@ -132,7 +137,7 @@ func (scr *Soccer) GetNumActions() int {
  *  Accessor for observation space size
  */
 func (scr *Soccer) GetNumObservations() int {
-	return len(scr.OBSERVATION_SPACE)
+	return int(scr.OBSERVATION_SPACE[0][1] * scr.OBSERVATION_SPACE[1][1])
 }
 
 /**
