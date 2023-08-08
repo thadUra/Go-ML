@@ -1,7 +1,7 @@
 package rl
 
 import (
-	"Soccer-Penalty-Kick-ML-Threading/environment"
+	env "Soccer-Penalty-Kick-ML-Threading/environment"
 	"fmt"
 
 	"gonum.org/v1/gonum/mat"
@@ -12,7 +12,7 @@ import (
  *  Contains agent variables for Q learning
  */
 type QAgent struct {
-	ENV           *environment.Environment
+	ENV           *env.Environment
 	MAX_EPISODES  int
 	MAX_ACTIONS   int
 	LEARNING_RATE float64
@@ -26,7 +26,7 @@ type QAgent struct {
  *  Initialize a q agent instance
  */
 func InitQAgent(
-	env *environment.Environment,
+	env *env.Environment,
 	max_eps int,
 	max_acts int,
 	learning_rate float64,
@@ -81,15 +81,15 @@ func (agt *QAgent) Train(info bool) (bool, error) {
 				return false, err
 			}
 			// Get max q value for state
-			max_val_in_state := agt.Q_TABLE.At(int(state), 0)
+			max_val_in_new_state := agt.Q_TABLE.At(int(new_state), 0)
 			_, cols := agt.Q_TABLE.Dims()
 			for c := 1; c < cols; c++ {
-				if agt.Q_TABLE.At(int(state), c) > max_val_in_state {
-					max_val_in_state = agt.Q_TABLE.At(int(state), c)
+				if agt.Q_TABLE.At(int(state), c) > max_val_in_new_state {
+					max_val_in_new_state = agt.Q_TABLE.At(int(state), c)
 				}
 			}
 			// Update q value in table
-			next_state_val := agt.Q_TABLE.At(int(state), int(action)) + agt.LEARNING_RATE*(reward+(agt.DISCOUNT*max_val_in_state)-agt.Q_TABLE.At(int(state), int(action)))
+			next_state_val := agt.Q_TABLE.At(int(state), int(action)) + agt.LEARNING_RATE*(reward+(agt.DISCOUNT*max_val_in_new_state)-agt.Q_TABLE.At(int(state), int(action)))
 			agt.Q_TABLE.Set(int(state), int(action), next_state_val)
 			// Update reward
 			total_reward += reward
@@ -129,10 +129,10 @@ func (agt *QAgent) Test(info bool) (bool, error) {
 	for j := 0; j < agt.MAX_ACTIONS; j++ {
 		// Get next action
 		action := (*agt.POLICY).SelectAction("test", agt.Q_TABLE, []float64{state})
-		fmt.Printf("	Prev State %d: %d\n", j+1, int(state))
+		// fmt.Printf("	Prev State %d: %d\n", j+1, int(state))
 		fmt.Printf("	Action     %d: %d\n", j+1, int(action))
 		new_state, reward, done, err := (*agt.ENV).Step([]float64{action})
-		fmt.Printf("	Next State %d: %d\n", j+1, int(new_state))
+		// fmt.Printf("	Next State %d: %d\n", j+1, int(new_state))
 		// Check error from step
 		if err != nil {
 			if info {

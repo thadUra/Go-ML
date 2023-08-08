@@ -63,7 +63,6 @@ func (policy *DecayExplorationPolicy) SelectAction(
 		} else {
 			test := rand.Float64() * float64(cols)
 			index = int(test)
-
 		}
 	} else if mode == "test" {
 		for c := 1; c < cols; c++ {

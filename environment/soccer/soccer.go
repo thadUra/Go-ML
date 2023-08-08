@@ -1,7 +1,7 @@
 package soccer
 
 import (
-	"Soccer-Penalty-Kick-ML-Threading/environment"
+	env "Soccer-Penalty-Kick-ML-Threading/environment"
 	"Soccer-Penalty-Kick-ML-Threading/nn"
 	"errors"
 	"math"
@@ -28,17 +28,17 @@ type Soccer struct {
  *  Action space conist of 9 actions: dribble in any of the 8 directions or shoot the ball
  *  Observation space consist of just the location on field
  */
-func InitSoccer() environment.Environment {
-	var env Soccer
-	env.pos = GeneratePos(0, 0, true)
-	env.field = GenerateField(0, 0, 0, 0, 0, 0, 0, true)
-	env.ACTION_SIZE = 1
-	env.OBSERVATION_SIZE = 2
-	env.ACTION_SPACE = append(env.ACTION_SPACE, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8})
-	env.OBSERVATION_SPACE = append(env.OBSERVATION_SPACE, []float64{0, float64(env.field.FIELD_WIDTH)})
-	env.OBSERVATION_SPACE = append(env.OBSERVATION_SPACE, []float64{0, float64(env.field.FIELD_HEIGHT)})
-	env.shotModel = nil
-	return environment.Environment(&env)
+func InitSoccer() env.Environment {
+	var scr Soccer
+	scr.pos = GeneratePos(0, 0, true)
+	scr.field = GenerateField(0, 0, 0, 0, 0, 0, 0, true)
+	scr.ACTION_SIZE = 1
+	scr.OBSERVATION_SIZE = 2
+	scr.ACTION_SPACE = append(scr.ACTION_SPACE, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8})
+	scr.OBSERVATION_SPACE = append(scr.OBSERVATION_SPACE, []float64{0, float64(scr.field.FIELD_WIDTH)})
+	scr.OBSERVATION_SPACE = append(scr.OBSERVATION_SPACE, []float64{0, float64(scr.field.FIELD_HEIGHT)})
+	scr.shotModel = nil
+	return env.Environment(&scr)
 }
 
 /**
@@ -78,11 +78,11 @@ func (scr *Soccer) Step(
 			if result == "GOAL" {
 				return state, 1000, true, nil
 			} else if result == "SAVED" {
-				return state, 0, true, nil
+				return state, 50, true, nil
 			} else if result == "POST" || result == "CROSSBAR" {
 				return state, 0, true, nil
 			} else {
-				return state, 0, true, nil
+				return state, -500, true, nil
 			}
 		}
 	} else {
@@ -107,10 +107,10 @@ func (scr *Soccer) Step(
 		// Check if position is out of bounds
 		if scr.pos.OutOfBounds(scr.field) {
 			// fmt.Printf("	OUT OF BOUNDS AT (%f,%f)\n", scr.pos.DISTANCE_X, scr.pos.DISTANCE_Y)
-			return state, 0, true, nil
+			return state, -500, true, nil
 		}
 		state = scr.OBSERVATION_SPACE[0][1]*scr.pos.DISTANCE_Y + scr.pos.DISTANCE_X
-		return state, 0, false, nil
+		return state, -1, false, nil
 	}
 }
 
@@ -119,7 +119,7 @@ func (scr *Soccer) Step(
  *  Resets position to random spot on field
  */
 func (scr *Soccer) Reset() float64 {
-	scr.pos = GeneratePos(112, 250, false)
+	scr.pos = GeneratePos(112, 300, false)
 	// scr.pos = GeneratePos(rand.Float64()*scr.field.FIELD_HEIGHT, rand.Float64()*scr.field.FIELD_WIDTH, false)
 	return scr.OBSERVATION_SPACE[0][1]*scr.pos.DISTANCE_Y + scr.pos.DISTANCE_X
 }
@@ -137,7 +137,7 @@ func (scr *Soccer) GetNumActions() int {
  *  Accessor for observation space size
  */
 func (scr *Soccer) GetNumObservations() int {
-	return int(scr.OBSERVATION_SPACE[0][1] * scr.OBSERVATION_SPACE[1][1])
+	return int((scr.OBSERVATION_SPACE[0][1] + 1) * (scr.OBSERVATION_SPACE[1][1] + 1))
 }
 
 /**

@@ -1,7 +1,7 @@
 package frozenlake
 
 import (
-	"Soccer-Penalty-Kick-ML-Threading/environment"
+	env "Soccer-Penalty-Kick-ML-Threading/environment"
 	"errors"
 	"fmt"
 	"math"
@@ -27,16 +27,16 @@ type FrozenLake struct {
  *  InitFrozenLake()
  *  Generates frozenlake env
  */
-func InitFrozenLake(rows, cols int, hole_multiplier float64, slippery bool) environment.Environment {
-	var env FrozenLake
-	env.CURRENT_STATE = 0
-	env.SLIPPERY = slippery
-	env.ROWS = rows
-	env.COLS = cols
-	env.ACTION_SIZE = 1
-	env.OBSERVATION_SIZE = 1
-	env.ACTION_SPACE = []int{0, 1, 2, 3}
-	env.OBSERVATION_SPACE = make([]string, rows*cols)
+func InitFrozenLake(rows, cols int, hole_multiplier float64, slippery bool) env.Environment {
+	var frzn FrozenLake
+	frzn.CURRENT_STATE = 0
+	frzn.SLIPPERY = slippery
+	frzn.ROWS = rows
+	frzn.COLS = cols
+	frzn.ACTION_SIZE = 1
+	frzn.OBSERVATION_SIZE = 1
+	frzn.ACTION_SPACE = []int{0, 1, 2, 3}
+	frzn.OBSERVATION_SPACE = make([]string, rows*cols)
 
 	// Generate map for S: start, G: goal, F: frozen, H: hole
 	valid_map := false
@@ -46,14 +46,14 @@ func InitFrozenLake(rows, cols int, hole_multiplier float64, slippery bool) envi
 		max_holes := math.Sqrt(float64(rows * cols))
 		for i := 0; i < rows*cols; i++ {
 			if i == 0 {
-				env.OBSERVATION_SPACE[i] = "S"
+				frzn.OBSERVATION_SPACE[i] = "S"
 			} else if i == rows*cols-1 {
-				env.OBSERVATION_SPACE[i] = "G"
+				frzn.OBSERVATION_SPACE[i] = "G"
 			} else {
 				if total_holes < int(max_holes) && rand.Float64() < hole_multiplier*max_holes/float64(rows*cols) {
-					env.OBSERVATION_SPACE[i] = "H"
+					frzn.OBSERVATION_SPACE[i] = "H"
 				} else {
-					env.OBSERVATION_SPACE[i] = "F"
+					frzn.OBSERVATION_SPACE[i] = "F"
 				}
 			}
 		}
@@ -67,16 +67,16 @@ func InitFrozenLake(rows, cols int, hole_multiplier float64, slippery bool) envi
 				queue = queue[1:]
 			} else {
 				r, c := int(float64(top)/float64(cols)), top%cols
-				if r-1 >= 0 && env.OBSERVATION_SPACE[top-cols] != "H" {
+				if r-1 >= 0 && frzn.OBSERVATION_SPACE[top-cols] != "H" {
 					queue = append(queue, top-cols)
 				}
-				if r+1 < rows && env.OBSERVATION_SPACE[top+cols] != "H" {
+				if r+1 < rows && frzn.OBSERVATION_SPACE[top+cols] != "H" {
 					queue = append(queue, top+cols)
 				}
-				if c-1 >= 0 && env.OBSERVATION_SPACE[top-1] != "H" {
+				if c-1 >= 0 && frzn.OBSERVATION_SPACE[top-1] != "H" {
 					queue = append(queue, top-1)
 				}
-				if c+1 < cols && env.OBSERVATION_SPACE[top+1] != "H" {
+				if c+1 < cols && frzn.OBSERVATION_SPACE[top+1] != "H" {
 					queue = append(queue, top+1)
 				}
 				visited[top] = true
@@ -91,12 +91,12 @@ func InitFrozenLake(rows, cols int, hole_multiplier float64, slippery bool) envi
 	fmt.Println("===MAP LAYOUT===")
 	for r := 0; r < rows; r++ {
 		for c := 0; c < cols; c++ {
-			fmt.Printf("%s ", env.OBSERVATION_SPACE[r*cols+c])
+			fmt.Printf("%s ", frzn.OBSERVATION_SPACE[r*cols+c])
 		}
 		fmt.Println("")
 	}
 	fmt.Println("===END MAP LAYOUT===")
-	return environment.Environment(&env)
+	return env.Environment(&frzn)
 }
 
 /**
@@ -172,6 +172,7 @@ func (frzn *FrozenLake) Step(
 		done = false
 	}
 	if frzn.OBSERVATION_SPACE[frzn.CURRENT_STATE] == "H" {
+		reward = -1.0
 		done = true
 	}
 	return float64(frzn.CURRENT_STATE), reward, done, nil
