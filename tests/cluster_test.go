@@ -1,12 +1,13 @@
 package tests
 
 import (
-	cluster "Golang-ML/clustering"
 	"encoding/csv"
 	"io"
 	"os"
 	"strconv"
 	"testing"
+
+	cluster "github.com/thadUra/Golang-Machine-Learning/clustering"
 )
 
 /**

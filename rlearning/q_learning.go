@@ -1,9 +1,9 @@
-package rl
+package rlearning
 
 import (
-	env "Golang-ML/environment"
 	"fmt"
 
+	env "github.com/thadUra/Golang-Machine-Learning/environment"
 	"gonum.org/v1/gonum/mat"
 )
 

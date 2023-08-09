@@ -1,4 +1,4 @@
-package rl
+package rlearning
 
 import (
 	"math/rand"

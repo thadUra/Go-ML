@@ -1,11 +1,11 @@
 package tests
 
 import (
-	"Golang-ML/nn"
 	"fmt"
 	"math"
 	"testing"
 
+	"github.com/thadUra/Golang-Machine-Learning/nn"
 	"gonum.org/v1/gonum/mat"
 )
 

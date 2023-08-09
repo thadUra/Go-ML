@@ -1,4 +1,4 @@
-module github.com/thadUra/Golang-ML
+module github.com/thadUra/Golang-Machine-Learning
 
 go 1.20
 

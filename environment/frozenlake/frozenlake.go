@@ -1,11 +1,12 @@
 package frozenlake
 
 import (
-	env "Golang-ML/environment"
 	"errors"
 	"fmt"
 	"math"
 	"math/rand"
+
+	env "github.com/thadUra/Golang-Machine-Learning/environment"
 )
 
 /**

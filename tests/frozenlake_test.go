@@ -1,10 +1,11 @@
 package tests
 
 import (
-	"Golang-ML/environment/frozenlake"
-	"Golang-ML/rl"
-
 	"testing"
+
+	"github.com/thadUra/Golang-Machine-Learning/rlearning"
+
+	"github.com/thadUra/Golang-Machine-Learning/environment/frozenlake"
 )
 
 /**
@@ -29,7 +30,7 @@ func TestFrozenLake(t *testing.T) {
 	exploration_decay := 1.0 / float64(max_episodes)
 
 	// Initialize agent and set policy
-	agent := rl.InitQAgent(&env, max_episodes, max_actions, learning_rate, discount)
+	agent := rlearning.InitQAgent(&env, max_episodes, max_actions, learning_rate, discount)
 	agent.SetPolicy("", []float64{exploration_rate, exploration_decay})
 
 	// Train the agent

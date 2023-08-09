@@ -1,4 +1,4 @@
-package go_ml
+package main
 
 /**
  * Links:

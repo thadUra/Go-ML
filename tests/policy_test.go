@@ -1,11 +1,11 @@
 package tests
 
 import (
-	"Golang-ML/rl"
 	"fmt"
 	"math/rand"
 	"testing"
 
+	"github.com/thadUra/Golang-Machine-Learning/rlearning"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -25,7 +25,7 @@ func TestPolicies(t *testing.T) {
 	fmt.Printf("table = %v\n", ftable)
 
 	// Test DecayExplorationPolicy
-	policy := rl.InitPolicy("DecayExploration", []float64{0.5, 1.0 / 1000.0})
+	policy := rlearning.InitPolicy("DecayExploration", []float64{0.5, 1.0 / 1000.0})
 	for i := 0; i < 25; i++ {
 		ret := (*policy).SelectAction("train", table, []float64{float64(i % rows)})
 		fmt.Printf("Training Action %d: %f\n", i+1, ret)

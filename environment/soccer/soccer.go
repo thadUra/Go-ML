@@ -1,10 +1,11 @@
 package soccer
 
 import (
-	env "Golang-ML/environment"
-	"Golang-ML/nn"
 	"errors"
 	"math"
+
+	env "github.com/thadUra/Golang-Machine-Learning/environment"
+	"github.com/thadUra/Golang-Machine-Learning/nn"
 )
 
 /**
