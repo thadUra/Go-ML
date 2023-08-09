@@ -54,8 +54,24 @@ func TestCluster(t *testing.T) {
 	plot_params := []string{"../tests/misc/pcaTest.png", "PCA Test", "PCA 1", "PCA 2"}
 	err = cluster.ScatterPlot2DimenData(result, label, plot_params)
 	if err != nil {
-		t.Fatalf(`TestCluster(): failed at plotting -> "%s"`, err)
+		t.Fatalf(`TestCluster(): failed at pca plotting -> "%s"`, err)
 	}
 
 	// Test KMeans
+	km := cluster.InitKMeans(3, 500)
+	err = km.Train(result)
+	if err != nil {
+		t.Fatalf(`TestCluster(): failed at kmeans training -> "%s"`, err)
+	}
+	result, new_label, err := km.Evaluate(result)
+	if err != nil {
+		t.Fatalf(`TestCluster(): failed at kmeans evaluation -> "%s"`, err)
+	}
+
+	// Generate scatterplot for KMeans results
+	plot_params = []string{"../tests/misc/kmeansTest.png", "KMeans Test", "X", "Y"}
+	err = cluster.ScatterPlot2DimenData(result, new_label, plot_params)
+	if err != nil {
+		t.Fatalf(`TestCluster(): failed at kmeans plotting -> "%s"`, err)
+	}
 }
