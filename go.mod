@@ -1,4 +1,4 @@
-module Soccer-Penalty-Kick-ML-Threading
+module github.com/thadUra/Golang-ML
 
 go 1.20
 

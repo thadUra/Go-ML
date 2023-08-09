@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"Soccer-Penalty-Kick-ML-Threading/rl"
+	"Golang-ML/rl"
 	"fmt"
 	"math/rand"
 	"testing"

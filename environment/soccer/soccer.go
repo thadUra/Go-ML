@@ -1,8 +1,8 @@
 package soccer
 
 import (
-	env "Soccer-Penalty-Kick-ML-Threading/environment"
-	"Soccer-Penalty-Kick-ML-Threading/nn"
+	env "Golang-ML/environment"
+	"Golang-ML/nn"
 	"errors"
 	"math"
 )

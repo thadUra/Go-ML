@@ -1,4 +1,4 @@
-# Golang Machine Learning with Custom Soccer Environment
+# Golang Machine Learning Packages
 
 ### Description (WIP)
 

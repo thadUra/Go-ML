@@ -1,7 +1,7 @@
 package tests
 
 import (
-	cluster "Soccer-Penalty-Kick-ML-Threading/clustering"
+	cluster "Golang-ML/clustering"
 	"encoding/csv"
 	"io"
 	"os"

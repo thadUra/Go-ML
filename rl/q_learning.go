@@ -1,7 +1,7 @@
 package rl
 
 import (
-	env "Soccer-Penalty-Kick-ML-Threading/environment"
+	env "Golang-ML/environment"
 	"fmt"
 
 	"gonum.org/v1/gonum/mat"

@@ -1,7 +1,7 @@
 package frozenlake
 
 import (
-	env "Soccer-Penalty-Kick-ML-Threading/environment"
+	env "Golang-ML/environment"
 	"errors"
 	"fmt"
 	"math"

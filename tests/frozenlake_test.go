@@ -1,8 +1,9 @@
 package tests
 
 import (
-	"Soccer-Penalty-Kick-ML-Threading/environment/frozenlake"
-	"Soccer-Penalty-Kick-ML-Threading/rl"
+	"Golang-ML/environment/frozenlake"
+	"Golang-ML/rl"
+
 	"testing"
 )
 

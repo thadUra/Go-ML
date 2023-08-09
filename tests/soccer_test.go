@@ -1,17 +1,17 @@
 package tests
 
 import (
-	"Soccer-Penalty-Kick-ML-Threading/environment/soccer"
-	"Soccer-Penalty-Kick-ML-Threading/rl"
+	"Golang-ML/environment/soccer"
+	"Golang-ML/rl"
 	"testing"
 )
 
 /**
  * TestSoccer()
  * Tests the Soccer environment with Q learning agent
+ * WIP: Currently fails to train for some reason
  */
 func TestSoccer(t *testing.T) {
-
 	// Initialize env and parameters
 	env := soccer.InitSoccer()
 	max_episodes := 1000000
