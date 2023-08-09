@@ -11,30 +11,3 @@ NEW:
 TBD
 
 ### Environment (WIP)
-
-The environment for which models will be generated for is a soccer shooting simulation. Given any location on the soccer field, the model needs to score a goal to be rewarded. 
-
-##### Action Space (WIP)
-
-Horizontal Angle (radians)
-Vertical Angle   (radians)
-Power            (feet per second)
-
-##### Observation Space (WIP)
-
-Field Position X (feet)
-Field Position Y (feet)
-
-##### Rewards (WIP)
-
-If a goal is scored, 10.0 points are given.
-If the shot hits the crossbar or post, -1.0 points are given.
-If the shot misses entirely, -20.0 points are given.
-
-### Neural Network (WIP)
-
-DEEP Q-LEARNING INFO HERE
-
-##### Layers (WIP)
-
-FC layer, flattened layer
