@@ -93,15 +93,14 @@ func PCA(data [][]float64, n int) ([][]float64, error) {
 	mean_matrix := Float64TwoDimenToDense(x_mean)
 	subset_matrix := Float64TwoDimenToDense(subset)
 	reduced.Mul(subset_matrix.T(), mean_matrix.T())
-	reduced.T()
 
-	// Convert back to 2D float64 slice to return
+	// Convert back to 2D float64 slice to return while transposing
 	r, c := reduced.Dims()
 	var pca [][]float64
-	for i := 0; i < r; i++ {
-		temp := make([]float64, c)
-		for j := 0; j < c; j++ {
-			temp[j] = reduced.At(i, j)
+	for i := 0; i < c; i++ {
+		temp := make([]float64, r)
+		for j := 0; j < r; j++ {
+			temp[j] = reduced.At(j, i)
 		}
 		pca = append(pca, temp)
 	}
