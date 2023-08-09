@@ -177,7 +177,6 @@ func Covariance(data [][]float64, rowvar bool) ([][]float64, error) {
 
 /**
  * Eigen()
- * Helper function utilized for PCA
  * Return the eigenvalues and eigenvectors of a real symmetric matrix
  */
 func Eigen(data [][]float64) ([]float64, [][]float64, error) {

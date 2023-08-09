@@ -166,7 +166,7 @@ func (model *KMeans) Evaluate(data [][]float64) ([][]float64, []string, error) {
 			}
 		}
 		// Add label and point
-		name := "Centroid " + strconv.Itoa(min_idx)
+		name := "Cluster " + strconv.Itoa(min_idx)
 		label = append(label, name)
 		result = append(result, data[i])
 	}
@@ -175,7 +175,7 @@ func (model *KMeans) Evaluate(data [][]float64) ([][]float64, []string, error) {
 
 /**
  * Euclidean()
- * Grabs all the euclidean distances between a point and seet of points
+ * Grabs all the euclidean distances between a point and set of points
  */
 func Euclidean(point []float64, data [][]float64) []float64 {
 	result := make([]float64, len(data))
