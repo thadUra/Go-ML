@@ -6,20 +6,17 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-/**
- *  Policy Interface
- *  Outlines necessary accessors and modifiers for RL policies
- */
+// Policy is a representation for reinforcement learning policies with a function to
+// select an action given values and a mode type. An update function is needed to update
+// any policy parameters.
 type Policy interface {
 	SelectAction(mode string, values *mat.Dense, args []float64) float64
 	Update()
 }
 
-/**
- *  InitPolicy()
- *  Wrapper function that initializes policy given string and args
- */
-func InitPolicy(policyType string, args []float64) *Policy {
+// NewPolicy returns a policy defined by `policyType` acting as a wrapper initialization
+// function.
+func NewPolicy(policyType string, args []float64) *Policy {
 	var policy Policy
 	switch policyType {
 	case "DecayExploration":
@@ -31,19 +28,14 @@ func InitPolicy(policyType string, args []float64) *Policy {
 	return &policy
 }
 
-/**
- *  DecayExplorationPolicy struct
- *  Contains exploration rate and decay for selecting action over time
- */
+// DecayExplorationPolicy implements the Policy interface to represent a decayed
+// exploration policy for reinforcement learning.
 type DecayExplorationPolicy struct {
 	EXPLORATION_RATE  float64
 	EXPLORATION_DECAY float64
 }
 
-/**
- *  DecayExplorationPolicy interface functions
- *  State represented by row -> args[0]
- */
+// SelectAction returns an action given a state from `args`.
 func (policy *DecayExplorationPolicy) SelectAction(
 	mode string,
 	values *mat.Dense,
@@ -74,6 +66,8 @@ func (policy *DecayExplorationPolicy) SelectAction(
 	}
 	return float64(index)
 }
+
+// Update updates the `EXPLORATION_RATE` using the `EXPLORATION_DECAY` value.
 func (policy *DecayExplorationPolicy) Update() {
 	if policy.EXPLORATION_RATE > 0.001 {
 		policy.EXPLORATION_RATE -= policy.EXPLORATION_DECAY

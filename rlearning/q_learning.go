@@ -7,10 +7,9 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-/**
- *  QAgent struct
- *  Contains agent variables for Q learning
- */
+// QAgent implements the Agent interface for a Q-Learning agent. It contains the max
+// iterations for training, max actions in each iteration, learning rate, discount rate,
+// the learning policy, and table of Q values.
 type QAgent struct {
 	ENV           *env.Environment
 	MAX_EPISODES  int
@@ -21,11 +20,8 @@ type QAgent struct {
 	Q_TABLE       *mat.Dense
 }
 
-/**
- *  InitQAgent()
- *  Initialize a q agent instance
- */
-func InitQAgent(
+// NewQAgent returns a new QAgent instance given the environment and other parameters.
+func NewQAgent(
 	env *env.Environment,
 	max_eps int,
 	max_acts int,
@@ -43,18 +39,14 @@ func InitQAgent(
 	return agent
 }
 
-/**
- *  SetPolicy()
- *  Set decay exploration for learning policy
- */
+// SetPolicy sets the learning policy for the QAgent.
 func (agt *QAgent) SetPolicy(policyType string, args []float64) {
-	agt.POLICY = InitPolicy("DecayExploration", args)
+	agt.POLICY = NewPolicy("DecayExploration", args)
 }
 
-/**
- *  Train()
- *
- */
+// Train performs Q-learning on its environment. It returns `true` if it successfully
+// trains. It returns `false` if an error is thrown. If `info` is `true`, then print
+// statements are given for the reward at each episode.
 func (agt *QAgent) Train(info bool) (bool, error) {
 	// Info print statement
 	if info {
@@ -113,10 +105,9 @@ func (agt *QAgent) Train(info bool) (bool, error) {
 	return true, nil
 }
 
-/**
- *  Test()
- *
- */
+// Test performs one episode on the environment. It returns `true` if it successfully
+// performs the episode. If `info` is `true`, then print statements are given for the
+// episode.
 func (agt *QAgent) Test(info bool) (bool, error) {
 	// Info print statement
 	if info {

@@ -6,7 +6,7 @@ import (
 	"math"
 	"math/rand"
 
-	env "github.com/thadUra/Golang-Machine-Learning/environment"
+	"github.com/thadUra/Golang-Machine-Learning/env"
 )
 
 /**

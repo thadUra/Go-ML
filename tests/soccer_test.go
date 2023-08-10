@@ -29,7 +29,7 @@ func TestSoccer(t *testing.T) {
 	}
 
 	// Initialize agent and set policy
-	agent := rlearning.InitQAgent(&env, max_episodes, max_actions, learning_rate, discount)
+	agent := rlearning.NewQAgent(&env, max_episodes, max_actions, learning_rate, discount)
 	agent.SetPolicy("", []float64{exploration_rate, exploration_decay})
 
 	// Train the agent
