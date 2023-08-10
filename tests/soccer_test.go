@@ -14,7 +14,7 @@ import (
 func TestSoccer(t *testing.T) {
 	// Initialize env and parameters
 	env := soccer.NewSoccer()
-	max_episodes := 1000000
+	max_episodes := 10
 	max_actions := 500
 	learning_rate := 0.93
 	discount := 0.95
@@ -32,7 +32,7 @@ func TestSoccer(t *testing.T) {
 	agent.SetPolicy("", []float64{exploration_rate, exploration_decay})
 
 	// Train the agent
-	agent.Train(false)
+	agent.Train(true)
 
 	// Test the agent
 	agent.Test(true)

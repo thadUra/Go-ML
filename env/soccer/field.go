@@ -66,14 +66,7 @@ func (f Field) GetShotParameterLimits() [][]float64 {
 	return limitations
 }
 
-/**
- *  Shoot()
- *  Perform shooting action of ball given position, horizontal angle, vertical angle, and power
- *  Accounts for bouncing, rolling, friction, and energy loss
- *  Calculates if shot is a goal, miss, or hits the post/crossbar
- */
-
-// Shoot returns the result of shooting the ball given the current position and shooting parameters.
+// Shoot returns the result of shooting the ball given the current position and shooting parameters and the time it takes for the ball to travel to the net
 // Parameters consist of horizontal angle, vertical angle, and power. It accounts for bouncing,
 // rolling, friction, and energy loss. The results consist of goal, miss, or hitting the post/crossbar.
 // It throws an error if the patameters are not in range. If `debug` is true, the various calculations
@@ -82,7 +75,7 @@ func (f Field) Shoot(
 	pos Position,
 	parameters []float64,
 	debug bool,
-) (string, error) {
+) (string, float64, error) {
 	// Parameters for shot
 	horizontal_angle := parameters[0]
 	vertical_angle := parameters[1]
@@ -91,11 +84,11 @@ func (f Field) Shoot(
 	// Check shot parameters
 	limitations := f.GetShotParameterLimits()
 	if horizontal_angle < limitations[0][0] || horizontal_angle > limitations[0][1] {
-		return "", errors.New("field.Shoot: horizontal angle not in range")
+		return "", 0, errors.New("field.Shoot: horizontal angle not in range")
 	} else if vertical_angle < limitations[1][0] || vertical_angle > limitations[1][1] {
-		return "", errors.New("field.Shoot: vertical angle not in range")
+		return "", 0, errors.New("field.Shoot: vertical angle not in range")
 	} else if power < limitations[2][0] || power > limitations[2][1] {
-		return "", errors.New("field.Shoot: power not in range")
+		return "", 0, errors.New("field.Shoot: power not in range")
 	}
 
 	// Parameters for goal
@@ -212,21 +205,21 @@ func (f Field) Shoot(
 		width >= min_x &&
 		width <= max_x {
 		if duration < max_duration {
-			return "GOAL", nil
+			return "GOAL", duration, nil
 		} else {
-			return "SAVED", nil
+			return "SAVED", duration, nil
 		}
 	} else if width >= min_x &&
 		width <= max_x &&
 		height >= min_y &&
 		height <= (max_y+f.NET_DIAMETER+f.BALL_DIAMETER) {
-		return "CROSSBAR", nil
+		return "CROSSBAR", duration, nil
 	} else if height >= min_y &&
 		height <= max_y &&
 		((width <= max_x && width >= (min_x-f.NET_DIAMETER-f.BALL_DIAMETER)) ||
 			(width >= min_x && width <= (max_x+f.NET_DIAMETER+f.BALL_DIAMETER))) {
-		return "POST", nil
+		return "POST", duration, nil
 	} else {
-		return "MISS", nil
+		return "MISS", duration, nil
 	}
 }

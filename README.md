@@ -1,5 +1,5 @@
 # Golang-Machine-Learning
-[![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](http://www.gnu.org/licenses/gpl-3.0)
 [![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Golang-Machine-Learning)
 [![stability-unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)](https://github.com/emersion/stability-badges#unstable)
 
