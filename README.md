@@ -15,7 +15,7 @@ go get -u github.com/thadUra/Golang-Machine-Learning
 | Tasks To Do                                 | Current Status | Finished | 
 |---------------------------------------------|----------------|----------|
 | Initial Documentation for all packages      | Completed      | &check;  |
-| Make custom soccer env more deterministic   | In Progres     | &cross;  |
+| Make custom soccer env more deterministic   | In Progress    | &cross;  |
 | Optimize memory in implementation           | Not Started    | &cross;  |
 | Utilize goroutines to improve runtime       | Not Started    | &cross;  |
 | Implement custom dataframe type             | Not Started    | &cross;  |
