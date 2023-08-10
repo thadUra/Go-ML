@@ -4,16 +4,11 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-/**
- * Activation Function
- * Defines format of any activation function
- */
+// Activation defines a type for any activation function.
 type Activation func(input *mat.Dense) *mat.Dense
 
-/**
- * ActivationLayer Struct
- * Contains the activation function and its derivative for the layer
- */
+// ActivationLayer implements the Layer interface for an Activation layer in a neural
+// network.
 type ActivationLayer struct {
 	INPUT           *mat.Dense
 	OUTPUT          *mat.Dense
@@ -21,33 +16,24 @@ type ActivationLayer struct {
 	ACTIVATIONDERIV Activation
 }
 
-/**
- * InitActivationLayer()
- * Initializes an activation the activation function and its derivative
- */
-func InitActivationLayer(activation Activation, activationDeriv Activation) *ActivationLayer {
+// NewActivationLayer returns a new instance of an activation layer.
+func NewActivationLayer(activation Activation, activationDeriv Activation) *ActivationLayer {
 	var layer ActivationLayer
 	layer.ACTIVATION = activation
 	layer.ACTIVATIONDERIV = activationDeriv
 	return &layer
 }
 
-/**
- * ForwardPropagation()
- * Performs forward propagation for an activation layer required by Layer interface
- * Returns output matrix with the function performed
- */
+// ForwardPropagation implements the Layer interface and returns a matrix after
+// performing the activation function on the layer values.
 func (layer *ActivationLayer) ForwardPropagation(input *mat.Dense) *mat.Dense {
 	layer.INPUT = input
 	layer.OUTPUT = layer.ACTIVATION(layer.INPUT)
 	return layer.OUTPUT
 }
 
-/**
- * BackPropagation()
- * Performs back propagation for an activation layer required by Layer interface
- * Returns matrix of error generated from derivative of activation function
- */
+// BackPropagation implements the Layer interface and returns a matrix after
+// performing the derivative activation function on the layer values.
 func (layer *ActivationLayer) BackPropagation(output_error *mat.Dense, learning_rate float64) *mat.Dense {
 	deriv := layer.ACTIVATIONDERIV(layer.INPUT)
 	rows, cols := deriv.Dims()

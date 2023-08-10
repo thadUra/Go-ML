@@ -105,7 +105,7 @@ func EigenSym(data [][]float64) ([]float64, [][]float64, error) {
 	// Set matrix vars for calculating eigenvalues/vectors
 	var evectors mat.Dense
 	var dense mat.EigenSym
-	ok := dense.Factorize(Float64TwoDimenToSymDense(data), true)
+	ok := dense.Factorize(float64TwoDimenToSymDense(data), true)
 	if !ok {
 		return values, vectors, errors.New("Eigen(): Failed to factorize")
 	}
@@ -124,7 +124,7 @@ func EigenSym(data [][]float64) ([]float64, [][]float64, error) {
 }
 
 // Float64TwoDimenToDense returns a matrix (mat.Dense) of `data`.
-func Float64TwoDimenToDense(data [][]float64) *mat.Dense {
+func float64TwoDimenToDense(data [][]float64) *mat.Dense {
 	rows, cols := len(data), len(data[0])
 	data_1d := make([]float64, rows*cols)
 	for i := 0; i < rows; i++ {
@@ -136,7 +136,7 @@ func Float64TwoDimenToDense(data [][]float64) *mat.Dense {
 }
 
 // Float64TwoDimenToSymDense returns a symmetrical matrix (mat.SymDense) of `data`.
-func Float64TwoDimenToSymDense(data [][]float64) *mat.SymDense {
+func float64TwoDimenToSymDense(data [][]float64) *mat.SymDense {
 	rows, cols := len(data), len(data[0])
 	data_1d := make([]float64, rows*cols)
 	for i := 0; i < rows; i++ {

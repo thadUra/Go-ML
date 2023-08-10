@@ -111,7 +111,7 @@ func (agt *QAgent) Train(info bool) (bool, error) {
 func (agt *QAgent) Test(info bool) (bool, error) {
 	// Info print statement
 	if info {
-		fmt.Println("=====")
+		fmt.Println("===QAGENT TEST===")
 	}
 
 	// Test from reset environment
@@ -127,7 +127,7 @@ func (agt *QAgent) Test(info bool) (bool, error) {
 		// Check error from step
 		if err != nil {
 			if info {
-				fmt.Println("=====")
+				fmt.Println("===END QAGENT TEST===")
 			}
 			return false, err
 		}
@@ -141,8 +141,8 @@ func (agt *QAgent) Test(info bool) (bool, error) {
 		}
 	}
 	if info {
-		fmt.Printf("	Testing Total Reward: %f\n", total_reward)
-		fmt.Println("=====")
+		fmt.Printf("	Test Total Reward: %f\n", total_reward)
+		fmt.Println("===END QAGENT TEST===")
 	}
 	return true, nil
 }

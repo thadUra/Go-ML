@@ -39,19 +39,18 @@ Below contains example usage of the rlearning package on the frozen lake environ
 #### Result
 ```
     ===MAP LAYOUT===
-    S F H H 
+    S F F F 
+    H F H F 
     F F F F 
-    F H H F 
-    F F F G 
+    H F F G 
     ===END MAP LAYOUT===
-
-    =====
-            Action     1: 1
+    ===QAGENT TEST===
+            Action     1: 2
             Action     2: 1
             Action     3: 1
             Action     4: 2
             Action     5: 2
-            Action     6: 2
-            Testing Total Reward: 1.000000
-    =====
+            Action     6: 1
+            Test Total Reward: 1.000000
+    ===END QAGENT TEST===
 ```

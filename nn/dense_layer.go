@@ -6,10 +6,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-/**
- * DenseLayer Struct
- * Contains weights and bias for a dense / fully connected layer in a neural network
- */
+// DenseLayer implements the Layer interface for a Dense layer in a neural network.
 type DenseLayer struct {
 	INPUT   *mat.Dense
 	OUTPUT  *mat.Dense
@@ -17,11 +14,8 @@ type DenseLayer struct {
 	BIAS    *mat.Dense
 }
 
-/**
- * InitDenseLayer()
- * Initializes a dense layer given input and output shape
- */
-func InitDenseLayer(input_size int, output_size int) *DenseLayer {
+// NewDenseLayer returns a new instance of a dense layer.
+func NewDenseLayer(input_size int, output_size int) *DenseLayer {
 	// Initialize weights and bias matrices with random values
 	weight := make([]float64, input_size*output_size)
 	bias := make([]float64, output_size)
@@ -39,11 +33,8 @@ func InitDenseLayer(input_size int, output_size int) *DenseLayer {
 	return &layer
 }
 
-/**
- * ForwardPropagation()
- * Performs forward propagation for a dense layer required by Layer interface
- * Returns dot product of input and weights plus the bias
- */
+// ForwardPropagation implements the Layer interface and returns a matrix after
+// performing forward propagation.
 func (layer *DenseLayer) ForwardPropagation(input *mat.Dense) *mat.Dense {
 	layer.INPUT = input
 	var dot mat.Dense
@@ -53,11 +44,8 @@ func (layer *DenseLayer) ForwardPropagation(input *mat.Dense) *mat.Dense {
 	return layer.OUTPUT
 }
 
-/**
- * BackPropagation()
- * Performs back propagation for a dense layer required by Layer interface
- * Returns matrix of the input error from the current layer
- */
+// BackPropagation implements the Layer interface and returns the error matrix after
+// performing back propagation.
 func (layer *DenseLayer) BackPropagation(output_error *mat.Dense, learning_rate float64) *mat.Dense {
 	// Initalize matrices for manipulation
 	var input_error, weights_error, new_weight, new_bias mat.Dense

@@ -87,8 +87,8 @@ func PCA(data [][]float64, n int) ([][]float64, error) {
 
 	// Transform data
 	var reduced mat.Dense
-	mean_matrix := Float64TwoDimenToDense(x_mean)
-	subset_matrix := Float64TwoDimenToDense(subset)
+	mean_matrix := float64TwoDimenToDense(x_mean)
+	subset_matrix := float64TwoDimenToDense(subset)
 	reduced.Mul(subset_matrix.T(), mean_matrix.T())
 
 	// Convert back to 2D float64 slice to return while transposing

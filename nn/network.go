@@ -7,11 +7,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-/**
- * Network Struct
- * Contains neural network specifics and helper functions
- * Defines layers and loss functions
- */
+// Network represents the neural network model specifics and related helper functions for loss.
 type Network struct {
 	LAYERS      []*Layer
 	LOSSFUNC    func(y_true, y_pred *mat.Dense, params []float64) float64
@@ -21,10 +17,7 @@ type Network struct {
 	LAYER_COUNT int
 }
 
-/**
- * AddLayer()
- * Adds specific layer to neural network given activation type and input/output neuron dimensions
- */
+// AddLayer appends to `LAYERS` in the network given `layerType`, `activationType`, and output neurons.
 func (net *Network) AddLayer(layerType, activationType string, output_nodes int) {
 	var layer Layer
 	var activation Layer
@@ -35,38 +28,38 @@ func (net *Network) AddLayer(layerType, activationType string, output_nodes int)
 		net.OUTPUT_SIZE = output_nodes
 		return
 	case "DENSE":
-		layer = Layer(InitDenseLayer(net.OUTPUT_SIZE, output_nodes))
+		layer = Layer(NewDenseLayer(net.OUTPUT_SIZE, output_nodes))
 	case "FLATTEN":
 		if net.LAYER_COUNT == 0 {
 			net.OUTPUT_SIZE = output_nodes
 			return
 		}
-		flat := InitFlattenLayer(net.OUTPUT_SIZE, output_nodes)
+		flat := NewFlattenLayer(net.OUTPUT_SIZE, output_nodes)
 		layer = Layer(flat)
 		net.LAYERS = append(net.LAYERS, &layer)
 		_, net.OUTPUT_SIZE = flat.GetShape()
 		return
 	case "CONVOLUTIONAL":
-		layer = Layer(InitConvolutionalLayer(net.OUTPUT_SIZE, output_nodes))
+		layer = Layer(NewConvolutionalLayer(net.OUTPUT_SIZE, output_nodes))
 	default:
-		layer = Layer(InitDenseLayer(net.OUTPUT_SIZE, output_nodes))
+		layer = Layer(NewDenseLayer(net.OUTPUT_SIZE, output_nodes))
 	}
 	net.OUTPUT_SIZE = output_nodes
 
 	// Get activationType
 	switch activationType {
 	case "TANH":
-		activation = Layer(InitActivationLayer(Tanh, TanhDeriv))
+		activation = Layer(NewActivationLayer(Tanh, TanhDeriv))
 	case "SIGMOID":
-		activation = Layer(InitActivationLayer(Sigmoid, SigmoidDeriv))
+		activation = Layer(NewActivationLayer(Sigmoid, SigmoidDeriv))
 	case "RELU":
-		activation = Layer(InitActivationLayer(ReLu, ReLuDeriv))
+		activation = Layer(NewActivationLayer(ReLu, ReLuDeriv))
 	case "ARCTAN":
-		activation = Layer(InitActivationLayer(Arctan, ArctanDeriv))
+		activation = Layer(NewActivationLayer(Arctan, ArctanDeriv))
 	case "GAUSSIAN":
-		activation = Layer(InitActivationLayer(Gaussian, GaussianDeriv))
+		activation = Layer(NewActivationLayer(Gaussian, GaussianDeriv))
 	default:
-		activation = Layer(InitActivationLayer(Linear, LinearDeriv))
+		activation = Layer(NewActivationLayer(Linear, LinearDeriv))
 	}
 
 	// Add layers to network
@@ -74,11 +67,7 @@ func (net *Network) AddLayer(layerType, activationType string, output_nodes int)
 	net.LAYERS = append(net.LAYERS, &activation)
 }
 
-/**
- * SetLoss()
- * Contains neural network specifics and helper functions
- * Defines layers and loss functions
- */
+// SetLoss initializes the loss function for the network given `lossType`.
 func (net *Network) SetLoss(lossType string, params []float64) {
 	net.LOSSPARAMS = params
 	switch lossType {
@@ -103,10 +92,7 @@ func (net *Network) SetLoss(lossType string, params []float64) {
 	}
 }
 
-/**
- * Predict()
- * Given sample data, return predicted values ran through the neural network
- */
+// Predict returns predicted values given `input` through running the values through the neural network.
 func (net *Network) Predict(input [][]float64) [][]float64 {
 	// Init result and sample size
 	var result [][]float64
@@ -132,11 +118,8 @@ func (net *Network) Predict(input [][]float64) [][]float64 {
 	return result
 }
 
-/**
- * Fit()
- * Fit the neural network given training data, number of epochs, and a learning rate
- * Debug option provided for printing data from each epoch
- */
+// Fit trains the neural network provided training data, the number of epochs, and learning rate.
+// If `debug` is true, then the error at each epoch is printed in terminal.
 func (net *Network) Fit(x_train, y_train [][]float64, epochs int, learning_rate float64, debug bool) {
 	// Record training duration
 	start := time.Now()
@@ -177,7 +160,5 @@ func (net *Network) Fit(x_train, y_train [][]float64, epochs int, learning_rate 
 
 	// Print training time
 	elapsed := time.Since(start)
-	if debug {
-		fmt.Printf("Training Time: %s\n", elapsed)
-	}
+	fmt.Printf("Training Time: %s\n\n", elapsed)
 }

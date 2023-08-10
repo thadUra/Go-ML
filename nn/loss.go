@@ -6,11 +6,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-// https://medium.com/nerd-for-tech/what-loss-function-to-use-for-machine-learning-project-b5c5bd4a151e
-
-/**
- * Mean Squared Error Loss Functions
- */
+// Mse returns the mean squared error given `y_true` and `y_pred` matrices.
 func Mse(y_true, y_pred *mat.Dense, params []float64) float64 {
 	ret := mat.DenseCopyOf(y_true)
 	ret.Sub(y_true, y_pred)
@@ -24,6 +20,8 @@ func Mse(y_true, y_pred *mat.Dense, params []float64) float64 {
 	mean := float64(sum / float64(rows*cols))
 	return mean
 }
+
+// MseDerivative returns the derivative matrix of the mean squared error given `y_true` and `y_pred` matrices.
 func MseDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 	ret := mat.DenseCopyOf(y_pred)
 	ret.Sub(y_pred, y_true)
@@ -33,12 +31,12 @@ func MseDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 	return ret
 }
 
-/**
- * Half Mean Squared Error Loss Functions
- */
+// Hmse returns the half mean squared error given `y_true` and `y_pred` matrices.
 func Hmse(y_true, y_pred *mat.Dense, params []float64) float64 {
 	return Mse(y_true, y_pred, params) / 2.0
 }
+
+// HmseDerivative returns the derivative matrix of the half mean squared error given `y_true` and `y_pred` matrices.
 func HmseDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 	ret := MseDerivative(y_true, y_pred, params)
 	mult := 0.5
@@ -46,12 +44,12 @@ func HmseDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 	return ret
 }
 
-/**
- * Root Mean Squared Error Loss Functions
- */
+// Rmse returns the root mean squared error given `y_true` and `y_pred` matrices.
 func Rmse(y_true, y_pred *mat.Dense, params []float64) float64 {
 	return math.Sqrt(Mse(y_true, y_pred, params))
 }
+
+// RmseDerivative returns the derivative matrix of the root mean squared error given `y_true` and `y_pred` matrices.
 func RmseDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 	ret := MseDerivative(y_true, y_pred, params)
 	mult := 1.0 / (2.0 * Rmse(y_true, y_pred, params))
@@ -59,10 +57,7 @@ func RmseDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 	return ret
 }
 
-/**
- * Mean Absolute Error Loss Functions
- * Derivative defaults to 1 when y_pred = y_true due to not being differentiable
- */
+// Mae returns the mean absolute error given `y_true` and `y_pred` matrices.
 func Mae(y_true, y_pred *mat.Dense, params []float64) float64 {
 	ret := mat.DenseCopyOf(y_true)
 	ret.Sub(y_true, y_pred)
@@ -76,6 +71,9 @@ func Mae(y_true, y_pred *mat.Dense, params []float64) float64 {
 	mean := float64(sum / float64(rows*cols))
 	return mean
 }
+
+// MaeDerivative returns the derivative matrix of the mean absolute error given `y_true` and `y_pred` matrices.
+// The derivative defaults to 1 when y_pred = y_true due to not being differentiable.
 func MaeDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 	ret := mat.DenseCopyOf(y_pred)
 	rows, cols := y_true.Dims()
@@ -91,11 +89,8 @@ func MaeDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 	return ret
 }
 
-/**
- * Huber Loss Functions
- * Implements a pseudo-huber loss type to approximate
- * Takes in a delta value as a parameter
- */
+// Huber returns the pseudo-huber loss given `y_true` and `y_pred` matrices. Params[0]
+// represents the provided delta value.
 func Huber(y_true, y_pred *mat.Dense, params []float64) float64 {
 	ret := mat.DenseCopyOf(y_true)
 	ret.Sub(y_true, y_pred)
@@ -109,6 +104,9 @@ func Huber(y_true, y_pred *mat.Dense, params []float64) float64 {
 	}
 	return sum
 }
+
+// Huber returns the derivative matrix of the pseudo-huber loss given `y_true` and `y_pred`
+// matrices. Params[0] represents the provided delta value.
 func HuberDerivative(y_true, y_pred *mat.Dense, params []float64) *mat.Dense {
 	ret := mat.DenseCopyOf(y_true)
 	ret.Sub(y_pred, y_true)

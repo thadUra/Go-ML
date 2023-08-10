@@ -6,11 +6,8 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-/**
- * Apply()
- * Helper that takes a function as a parameter to perform on the layer input
- */
-func Apply(fn func(x float64) float64, input *mat.Dense) *mat.Dense {
+// apply performs the function on a matrix and returns the new matrix.
+func apply(fn func(x float64) float64, input *mat.Dense) *mat.Dense {
 	rows, cols := input.Dims()
 	apply := make([]float64, rows*cols)
 	for r := 0; r < rows; r++ {
@@ -21,45 +18,44 @@ func Apply(fn func(x float64) float64, input *mat.Dense) *mat.Dense {
 	return mat.NewDense(rows, cols, apply)
 }
 
-/**
- * Tanh Activation Funcs
- */
+// Tanh Activation function
 func Tanh(input *mat.Dense) *mat.Dense {
-	return Apply(math.Tanh, input)
+	return apply(math.Tanh, input)
 }
+
+// Tanh Derivative function
 func TanhDeriv(input *mat.Dense) *mat.Dense {
 	tanh_deriv := func(x float64) float64 {
 		return 1 - (math.Pow(math.Tanh(x), 2))
 	}
-	return Apply(tanh_deriv, input)
+	return apply(tanh_deriv, input)
 }
 
-/**
- * Sigmoid Activation Funcs
- */
+// Sigmoid Activation function
 func Sigmoid(input *mat.Dense) *mat.Dense {
 	sigmoid := func(x float64) float64 {
 		return 1 / (1 + math.Pow(math.E, -x))
 	}
-	return Apply(sigmoid, input)
+	return apply(sigmoid, input)
 }
+
+// Sigmoid Derivative function
 func SigmoidDeriv(input *mat.Dense) *mat.Dense {
 	sigmoid_deriv := func(x float64) float64 {
 		return math.Pow(math.E, x) / math.Pow(math.Pow(math.E, x)+1, 2)
 	}
-	return Apply(sigmoid_deriv, input)
+	return apply(sigmoid_deriv, input)
 }
 
-/**
- * ReLu Activation Funcs
- * Derivative defaults to 0 if x = 0
- */
+// ReLu Activation function: it defaults to 0 if x = 0
 func ReLu(input *mat.Dense) *mat.Dense {
 	relu := func(x float64) float64 {
 		return math.Max(0, x)
 	}
-	return Apply(relu, input)
+	return apply(relu, input)
 }
+
+// ReLu Derivative function
 func ReLuDeriv(input *mat.Dense) *mat.Dense {
 	relu_deriv := func(x float64) float64 {
 		if x <= 0 {
@@ -68,51 +64,50 @@ func ReLuDeriv(input *mat.Dense) *mat.Dense {
 			return 1
 		}
 	}
-	return Apply(relu_deriv, input)
+	return apply(relu_deriv, input)
 }
 
-/**
- * Arctan Activation Funcs
- */
+// Arctan Activation function
 func Arctan(input *mat.Dense) *mat.Dense {
-	return Apply(math.Atan, input)
+	return apply(math.Atan, input)
 }
+
+// Arctan Derivative function
 func ArctanDeriv(input *mat.Dense) *mat.Dense {
 	arctan_deriv := func(x float64) float64 {
 		return 1 / (math.Pow(x, 2) + 1)
 	}
-	return Apply(arctan_deriv, input)
+	return apply(arctan_deriv, input)
 }
 
-/**
- * Gaussian Activation Funcs
- */
+// Gaussian Activation function
 func Gaussian(input *mat.Dense) *mat.Dense {
 	gaussian := func(x float64) float64 {
 		return math.Pow(math.E, -1*x*x)
 	}
-	return Apply(gaussian, input)
+	return apply(gaussian, input)
 }
+
+// Gaussian Derivative function
 func GaussianDeriv(input *mat.Dense) *mat.Dense {
 	gaussian_deriv := func(x float64) float64 {
 		return -2 * x * math.Pow(math.E, -1*x*x)
 	}
-	return Apply(gaussian_deriv, input)
+	return apply(gaussian_deriv, input)
 }
 
-/**
- * Linear Activation Funcs
- */
+// Linear Activation function
 func Linear(input *mat.Dense) *mat.Dense {
 	linear := func(x float64) float64 {
 		return x
 	}
-	return Apply(linear, input)
+	return apply(linear, input)
 }
 
+// Linear Derivative function
 func LinearDeriv(input *mat.Dense) *mat.Dense {
 	linear_deriv := func(x float64) float64 {
 		return 1
 	}
-	return Apply(linear_deriv, input)
+	return apply(linear_deriv, input)
 }

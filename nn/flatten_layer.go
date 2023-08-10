@@ -4,10 +4,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-/**
- * FlattenLayer Struct
- * Contains input and output matrices
- */
+// ConvolutionalLayer implements the Layer interface for a flat layer (CURRENT WIP).
 type FlattenLayer struct {
 	INPUT        *mat.Dense
 	OUTPUT       *mat.Dense
@@ -15,21 +12,15 @@ type FlattenLayer struct {
 	OUTPUT_SHAPE int
 }
 
-/**
- * InitFlattenLayer()
- * Flattened layer serves to simply reshape inputs and outputs
- */
-func InitFlattenLayer(input_size int, output_size int) *FlattenLayer {
+// NewFlattenLayer returns a new instance of a flat layer (CURRENT WIP).
+func NewFlattenLayer(input_size int, output_size int) *FlattenLayer {
 	// Initialize and return
 	var layer FlattenLayer
 	return &layer
 }
 
-/**
- * ForwardPropagation()
- * Performs forward propagation for a flat layer required by Layer interface
- * WIP for Convolutional Layer
- */
+// ForwardPropagation implements the Layer interface and returns a matrix after
+// performing forward propagation (CURRENT WIP).
 func (layer *FlattenLayer) ForwardPropagation(input *mat.Dense) *mat.Dense {
 	layer.INPUT = input
 	rows, cols := input.Dims()
@@ -43,11 +34,8 @@ func (layer *FlattenLayer) ForwardPropagation(input *mat.Dense) *mat.Dense {
 	return layer.OUTPUT
 }
 
-/**
- * BackPropagation()
- * Performs back propagation for a flat layer required by Layer interface
- * WIP for Convolutional Layer
- */
+// BackPropagation implements the Layer interface and returns the error matrix after
+// performing back propagation (CURRENT WIP).
 func (layer *FlattenLayer) BackPropagation(output_error *mat.Dense, learning_rate float64) *mat.Dense {
 	rows, cols := output_error.Dims()
 	arr := make([]float64, rows*cols)
@@ -61,10 +49,7 @@ func (layer *FlattenLayer) BackPropagation(output_error *mat.Dense, learning_rat
 	return reshape
 }
 
-/**
- * GetShape()
- * Accessor for flat layer shape
- */
+// GetShape returns the flat layers dimensions
 func (layer *FlattenLayer) GetShape() (int, int) {
 	return layer.INPUT_SHAPE, layer.OUTPUT_SHAPE
 }
