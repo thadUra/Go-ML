@@ -2,37 +2,29 @@ package cluster
 
 import (
 	"errors"
-	"math"
 	"math/rand"
 	"strconv"
 )
 
-/**
- * KMeans struct
- * Stores centroids and number of clusters in model
- */
+// KMeans represents a classification model utilizing K-Means clustering
 type KMeans struct {
 	CENTROIDS    [][]float64
 	CLUSTERS     int
 	MAX_EPISODES int
 }
 
-/**
- * InitKMeans()
- * Initializes KMeans model with n clusters and max_eps iterations
- */
-func InitKMeans(n, max_eps int) *KMeans {
+// NewKMeans creates a new K-Means model with `n` clusters. `Max_eps` represents the maximum
+// amount of episodes or iterations the model will train on until convergence.
+func NewKMeans(n, max_eps int) *KMeans {
 	var model KMeans
 	model.CLUSTERS = n
 	model.MAX_EPISODES = max_eps
 	return &model
 }
 
-/**
- * Train()
- * Generates KMeans model with training data using KMeans++ algorithm
- * Throws error if data dimensions are empty/not consistent or fail in centroid calculations
- */
+// Train performs the K-Means clustering algorithm on `data` and generates a classification model.
+// An error is returned if dimensions are empty or not consistent. As well, it returns an
+// error if centroid calculations fail at any point.
 func (model *KMeans) Train(data [][]float64) error {
 	// Check data dimensions
 	if len(data) < 1 {
@@ -131,12 +123,9 @@ func (model *KMeans) Train(data [][]float64) error {
 	return nil
 }
 
-/**
- * Evaluate()
- * Evaluates data with trained model to perform cluster analysis
- * Returns analysis with labels for plotting
- * Throws error if model not trained
- */
+// Evaluate takes in `data` and classifies it according to the trained K-Means model. It
+// returns the data along with the centroid points with its correlated labels. An error
+// is returned if the model was not yet trained.
 func (model *KMeans) Evaluate(data [][]float64) ([][]float64, []string, error) {
 	var result [][]float64
 	var label []string
@@ -171,16 +160,4 @@ func (model *KMeans) Evaluate(data [][]float64) ([][]float64, []string, error) {
 		result = append(result, data[i])
 	}
 	return result, label, nil
-}
-
-/**
- * Euclidean()
- * Grabs all the euclidean distances between a point and set of points
- */
-func Euclidean(point []float64, data [][]float64) []float64 {
-	result := make([]float64, len(data))
-	for i := range data {
-		result[i] = math.Sqrt(math.Pow(point[0]-data[i][0], 2) + math.Pow(point[1]-data[i][1], 2))
-	}
-	return result
 }

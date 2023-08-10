@@ -1,11 +1,9 @@
 package cluster
 
-/**
- * Spectral()
- * Performs spectral clustering on data and returns the label for each data point
- * Clusters data into 2 partitions
- * Radius value determines connectivity
- */
+// Spectral performs spectral clustering on `data` and returns the classified labels
+// for each point. Spectral clustering partitions the data into 2 clusters. `radius`
+// determines the connectivity of each point. It returns an error if eigenvectors
+// fail to be generated from the Laplacian matrix.
 func Spectral(data [][]float64, radius float64) ([]string, error) {
 	var label []string
 
@@ -25,7 +23,7 @@ func Spectral(data [][]float64, radius float64) ([]string, error) {
 	}
 
 	// Generate eigenvectors from laplacian matrix
-	_, eigen_vectors, err := Eigen(laplacian)
+	_, eigen_vectors, err := EigenSym(laplacian)
 	if err != nil {
 		return label, err
 	}

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"testing"
 
-	cluster "github.com/thadUra/Golang-Machine-Learning/clustering"
+	cluster "github.com/thadUra/Golang-Machine-Learning/cluster"
 )
 
 /**
@@ -59,7 +59,7 @@ func TestCluster(t *testing.T) {
 	}
 
 	// Test KMeans
-	km := cluster.InitKMeans(3, 500)
+	km := cluster.NewKMeans(3, 500)
 	err = km.Train(result)
 	if err != nil {
 		t.Fatalf(`TestCluster(): failed at kmeans training -> "%s"`, err)
@@ -106,7 +106,7 @@ func TestCluster(t *testing.T) {
 	}
 
 	// Test Kmeans
-	km = cluster.InitKMeans(2, 500)
+	km = cluster.NewKMeans(2, 500)
 	err = km.Train(data)
 	if err != nil {
 		t.Fatalf(`TestCluster(): failed at kmeans training -> "%s"`, err)

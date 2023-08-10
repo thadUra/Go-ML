@@ -3,7 +3,7 @@ package rlearning
 import (
 	"fmt"
 
-	env "github.com/thadUra/Golang-Machine-Learning/environment"
+	env "github.com/thadUra/Golang-Machine-Learning/env"
 	"gonum.org/v1/gonum/mat"
 )
 

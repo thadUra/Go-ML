@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/thadUra/Golang-Machine-Learning/environment/soccer"
+	"github.com/thadUra/Golang-Machine-Learning/env/soccer"
 	"github.com/thadUra/Golang-Machine-Learning/rlearning"
 )
 

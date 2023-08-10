@@ -5,7 +5,7 @@ import (
 
 	"github.com/thadUra/Golang-Machine-Learning/rlearning"
 
-	"github.com/thadUra/Golang-Machine-Learning/environment/frozenlake"
+	"github.com/thadUra/Golang-Machine-Learning/env/frozenlake"
 )
 
 /**

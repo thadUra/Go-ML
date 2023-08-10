@@ -11,11 +11,10 @@ import (
 	"gonum.org/v1/plot/vg/draw"
 )
 
-/**
- * ScatterPlot2DimenData()
- * Creates a scatterplot with provided data, labels, and plot parameters
- * Params consist of output directory, title, and x/y labels
- */
+// ScatterPlot2DimenData generates a scatterplot using Go's plotter package. `Data`
+// provides the points on the plot, `label` contains the label for each point, `params`
+// consist of the plot's parameters such as output directory, plot title, and axis names.
+// It returns an error if any string params are provided incorrectly.
 func ScatterPlot2DimenData(data [][]float64, label []string, params []string) error {
 
 	// Check plot params dimensions
