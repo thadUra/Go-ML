@@ -10,11 +10,10 @@ import (
 /**
  * TestSoccer()
  * Tests the Soccer environment with Q learning agent
- * WIP: Currently fails to train for some reason
  */
 func TestSoccer(t *testing.T) {
 	// Initialize env and parameters
-	env := soccer.InitSoccer()
+	env := soccer.NewSoccer()
 	max_episodes := 1000000
 	max_actions := 500
 	learning_rate := 0.93

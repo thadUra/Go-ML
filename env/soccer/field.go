@@ -6,11 +6,8 @@ import (
 	"math"
 )
 
-/**
- *  Field Struct
- *  Information about the field, net, and ball dimensions
- *  Distances are in feet and grams
- */
+// Field represents the field dimensions and other related dimensional values of a soccer field.
+// Length is in feet and weight is in grams.
 type Field struct {
 	FIELD_WIDTH   float64
 	FIELD_HEIGHT  float64
@@ -21,11 +18,8 @@ type Field struct {
 	BALL_DIAMETER float64
 }
 
-/**
- *  GenerateField()
- *  Generate the field via parameters
- *  Default to fifa regulations
- */
+// GenerateField returns a new Field instance given various parameters. If `def` is true, it will
+// default to fifa regulation values.
 func GenerateField(
 	field_width float64,
 	field_height float64,
@@ -57,10 +51,7 @@ func GenerateField(
 	return f
 }
 
-/**
- *  GetShotParameterLimits()
- *  Return the range of horizontal/vertical angles and power of the shot
- */
+// GetShotParameterLimits returns the range of horizontal/vertical angles and power of the shot
 func (f Field) GetShotParameterLimits() [][]float64 {
 	// Min and max values for parameter
 	horizontal_angle := 80.0 // 160 degrees
@@ -81,6 +72,12 @@ func (f Field) GetShotParameterLimits() [][]float64 {
  *  Accounts for bouncing, rolling, friction, and energy loss
  *  Calculates if shot is a goal, miss, or hits the post/crossbar
  */
+
+// Shoot returns the result of shooting the ball given the current position and shooting parameters.
+// Parameters consist of horizontal angle, vertical angle, and power. It accounts for bouncing,
+// rolling, friction, and energy loss. The results consist of goal, miss, or hitting the post/crossbar.
+// It throws an error if the patameters are not in range. If `debug` is true, the various calculations
+// needed to determine the result is printed.
 func (f Field) Shoot(
 	pos Position,
 	parameters []float64,

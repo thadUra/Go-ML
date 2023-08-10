@@ -12,13 +12,14 @@ go get -u github.com/thadUra/Golang-Machine-Learning
 ```
 
 ## Roadmap
-| Tasks To Do                              | Current Status | Finished | 
-|------------------------------------------|----------------|----------|
-| Initial Documentation for all packages   | In Progress    | &check;  |
-| Optimize memory in implementation        | Not Started    | &cross;  |
-| Utilize goroutines to improve runtime    | Not Started    | &cross;  |
-| Implement custom dataframe type          | Not Started    | &cross;  |
-| ...                                      | ...            | ...      |
+| Tasks To Do                                 | Current Status | Finished | 
+|---------------------------------------------|----------------|----------|
+| Initial Documentation for all packages      | In Progress    | &check;  |
+| Make custom soccer env more deterministic   | Not Started    | &cross;  |
+| Optimize memory in implementation           | Not Started    | &cross;  |
+| Utilize goroutines to improve runtime       | Not Started    | &cross;  |
+| Implement custom dataframe type             | Not Started    | &cross;  |
+| ...                                         | ...            | ...      |
 
 ### Notes
 This library is actively being developed. If you would like to contribute to this library, please feel free to make any requests.

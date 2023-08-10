@@ -1,3 +1,4 @@
+// The soccer package contains code for generating the soccer environment.
 package soccer
 
 import (
@@ -8,11 +9,7 @@ import (
 	"github.com/thadUra/Golang-Machine-Learning/nn"
 )
 
-/**
- *  Soccer Struct
- *  Implements environment interface
- *  Contains position and field information
- */
+// Soccer represents the soccer environment and its parameters like Position and Field.
 type Soccer struct {
 	pos               Position
 	field             Field
@@ -23,13 +20,8 @@ type Soccer struct {
 	shotModel         *nn.Network
 }
 
-/**
- *  InitSoccer()
- *  Generates soccer env
- *  Action space conist of 9 actions: dribble in any of the 8 directions or shoot the ball
- *  Observation space consist of just the location on field
- */
-func InitSoccer() env.Environment {
+// NewSoccer generates a new environment instance given default parameters for the position and field dimensions.
+func NewSoccer() env.Environment {
 	var scr Soccer
 	scr.pos = GeneratePos(0, 0, true)
 	scr.field = GenerateField(0, 0, 0, 0, 0, 0, 0, true)
@@ -42,12 +34,7 @@ func InitSoccer() env.Environment {
 	return env.Environment(&scr)
 }
 
-/**
- *  Step() WIP
- *  Performs one step in soccer environment
- *  Can either dribble or shoot ball from current position
- *  Shot parameters picked by other ml model
- */
+// Step performs one action inside the environment.
 func (scr *Soccer) Step(
 	action []float64,
 ) (float64, float64, bool, error) {
@@ -115,44 +102,28 @@ func (scr *Soccer) Step(
 	}
 }
 
-/**
- *  Reset()
- *  Resets position to random spot on field
- */
+// Reset sets the current state to the mid backfield.
 func (scr *Soccer) Reset() float64 {
 	scr.pos = GeneratePos(112, 300, false)
-	// scr.pos = GeneratePos(rand.Float64()*scr.field.FIELD_HEIGHT, rand.Float64()*scr.field.FIELD_WIDTH, false)
 	return scr.OBSERVATION_SPACE[0][1]*scr.pos.DISTANCE_Y + scr.pos.DISTANCE_X
 }
 
-/**
- *  GetNumActions()
- *  Accessor for action space size
- */
+// GetNumActions returns the size of the action space.
 func (scr *Soccer) GetNumActions() int {
 	return len(scr.ACTION_SPACE[0])
 }
 
-/**
- *  GetNumObservations()
- *  Accessor for observation space size
- */
+// GetNumObservations returns the size of the observation space.
 func (scr *Soccer) GetNumObservations() int {
 	return int((scr.OBSERVATION_SPACE[0][1] + 1) * (scr.OBSERVATION_SPACE[1][1] + 1))
 }
 
-/**
- *  GetPos()
- *  Accessor for position
- */
+// GetPos returns the current Position object of the environment.
 func (scr *Soccer) GetPos() Position {
 	return scr.pos
 }
 
-/**
- *  GetField()
- *  Accessor for field
- */
+// GetField returns the current Field object of the environment.
 func (scr *Soccer) GetField() Field {
 	return scr.field
 }
