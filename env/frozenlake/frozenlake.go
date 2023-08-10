@@ -1,3 +1,6 @@
+// The frozenlake package contains code for generating the frozen lake environment.
+//
+// Credit goes to the gym library for implementation.
 package frozenlake
 
 import (
@@ -9,10 +12,7 @@ import (
 	"github.com/thadUra/Golang-Machine-Learning/env"
 )
 
-/**
- *  FrozenLake Struct
- *  Implements environment interface
- */
+// FrozenLake represents the frozen lake environment and its parameters.
 type FrozenLake struct {
 	CURRENT_STATE     int
 	SLIPPERY          bool
@@ -24,11 +24,9 @@ type FrozenLake struct {
 	OBSERVATION_SPACE []string
 }
 
-/**
- *  InitFrozenLake()
- *  Generates frozenlake env
- */
-func InitFrozenLake(rows, cols int, hole_multiplier float64, slippery bool) env.Environment {
+// NewFrozenLake generates a new environment instance given the number of rows and columns for the map,
+// the multiplier for how many holes there will be, and if the map is slippery.
+func NewFrozenLake(rows, cols int, hole_multiplier float64, slippery bool) env.Environment {
 	var frzn FrozenLake
 	frzn.CURRENT_STATE = 0
 	frzn.SLIPPERY = slippery
@@ -100,11 +98,7 @@ func InitFrozenLake(rows, cols int, hole_multiplier float64, slippery bool) env.
 	return env.Environment(&frzn)
 }
 
-/**
- *  Step() WIP
- *  Performs one step in frozenlake environment
- *  If slippery, it will move in intended direction with probability of 1/3
- */
+// Step performs one action inside the environment.
 func (frzn *FrozenLake) Step(
 	action []float64,
 ) (float64, float64, bool, error) {
@@ -179,27 +173,18 @@ func (frzn *FrozenLake) Step(
 	return float64(frzn.CURRENT_STATE), reward, done, nil
 }
 
-/**
- *  Reset()
- *  Set state to zero to reset (start is always at zero)
- */
+// Reset sets the current state back to the first square denoted as S.
 func (frzn *FrozenLake) Reset() float64 {
 	frzn.CURRENT_STATE = 0
 	return 0.0
 }
 
-/**
- *  GetNumActions()
- *  Accessor for action space size
- */
+// GetNumActions returns the size of the action space.
 func (frzn *FrozenLake) GetNumActions() int {
 	return len(frzn.ACTION_SPACE)
 }
 
-/**
- *  GetNumObservations()
- *  Accessor for observation space size
- */
+// GetNumObservations returns the size of the observation space.
 func (frzn *FrozenLake) GetNumObservations() int {
 	return len(frzn.OBSERVATION_SPACE)
 }

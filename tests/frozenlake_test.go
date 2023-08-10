@@ -14,7 +14,7 @@ import (
  */
 func TestFrozenLake(t *testing.T) {
 	// Initialize frozen lake env with 4x4 map
-	env := frozenlake.InitFrozenLake(4, 4, 1.25, false)
+	env := frozenlake.NewFrozenLake(4, 4, 1.25, false)
 	_, _, _, err := env.Step([]float64{})
 	if err == nil {
 		t.Fatalf(`Failed to get error from step with no action\n`)
