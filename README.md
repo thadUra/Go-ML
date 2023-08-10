@@ -1,13 +1,22 @@
-# Golang Machine Learning Packages
+[![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Golang-Machine-Learning)
+[![stability-unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)](https://github.com/emersion/stability-badges#unstable)
+# Golang Machine Learning
+Golang Machine Learning is a library aimed at providing ML functionality and capability to Go. Several packages provide usage with neural networks, clustering algorithms, and reinforcement learning.
 
-### Description (WIP)
+### Installation
+The library currently contains only pure Go. Installation can be done using `go get`.
+```
+go get -u github.com/thadUra/Golang-Machine-Learning
+```
 
-OLD:
-This project aims to experiment with Reinforced Deep Q-Learning algorithms and techniques in combination with multithreading to see if it is feasible, efficient, and effective. Model building is computationally extensive and time consuming. Thus, multithreading possibly introduces a means to improve the field. 
+### Roadmap
+| Tasks To Do                              | Current Status | Finished | 
+|------------------------------------------|----------------|----------|
+| Initial Documentation                    | In Progress    | &check;  |
+| Optimize memory in implementation        | Not Started    | &cross;  |
+| Utilize goroutines to improve runtime    | Not Started    | &cross;  |
+| ...                                      | ...            | ...      |
 
-To build the game environment and neural network, I decided to use Golang. Python, being the most popular, is not the fastest. C/C++ is fast, but not memory safe. To implement multithreading in a productive, fast, and memory safe way made Golang optimal.
-
-NEW:
-TBD
-
-### Environment (WIP)
+##### Notes
+This library is actively being developed. If you would like to contribute to this library, please feel free to make any requests.
