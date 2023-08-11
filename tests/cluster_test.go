@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"testing"
 
-	cluster "github.com/thadUra/Golang-Machine-Learning/cluster"
+	"github.com/thadUra/Go-ML/cluster"
 )
 
 /**

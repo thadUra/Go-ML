@@ -5,7 +5,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/thadUra/Golang-Machine-Learning/nn"
+	"github.com/thadUra/Go-ML/nn"
 )
 
 /**

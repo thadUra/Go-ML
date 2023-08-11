@@ -5,13 +5,12 @@ import (
 	"errors"
 	"math"
 
-	"github.com/thadUra/Golang-Machine-Learning/env"
-	"github.com/thadUra/Golang-Machine-Learning/nn"
+	"github.com/thadUra/Go-ML/env"
+	"github.com/thadUra/Go-ML/nn"
 )
 
 // Soccer represents the soccer environment and its parameters like Position and Field.
 type Soccer struct {
-	NUM_STEPS         float64
 	POS               Position
 	FIELD             Field
 	ACTION_SIZE       int
@@ -24,7 +23,6 @@ type Soccer struct {
 // NewSoccer generates a new environment instance given default parameters for the position and field dimensions.
 func NewSoccer() env.Environment {
 	var scr Soccer
-	scr.NUM_STEPS = 0
 	scr.POS = GeneratePos(0, 0, true)
 	scr.FIELD = GenerateField(0, 0, 0, 0, 0, 0, 0, true)
 	scr.ACTION_SIZE = 1
@@ -42,11 +40,10 @@ func (scr *Soccer) Step(
 ) (float64, float64, bool, error) {
 	// Current state
 	state := scr.OBSERVATION_SPACE[0][1]*scr.POS.DISTANCE_Y + scr.POS.DISTANCE_X
-	scr.NUM_STEPS++
 
 	// Check dimensions
 	if len(action) > 1 {
-		return state, -1, true, errors.New("soccer.Step: action dimensions are incorrect")
+		return state, 0, true, errors.New("soccer.Step: action dimensions are incorrect")
 	}
 
 	// Perform action (WIP WITH MANUAL SHOT PARAMS)
@@ -54,17 +51,18 @@ func (scr *Soccer) Step(
 		// Get shot params from ml model if initialized
 		var action []float64
 		if scr.shotModel != nil {
-			return state, -1, true, errors.New("soccer.Step: shot model not initialized")
+			return state, 0, true, errors.New("soccer.Step: shot model not initialized")
 		} else {
 			// Manually shoot between posts at half power
 			width_angle := math.Atan(((scr.GetField().FIELD_WIDTH / 2) - scr.GetPos().DISTANCE_X) / scr.GetPos().DISTANCE_Y)
-			action = []float64{width_angle, 10.0 * math.Pi / 180.0, 30}
+			action = []float64{width_angle, 10.0 * math.Pi / 180.0, 50}
 		}
 		// Check errors with any model prediction
 
 		result, time, err := scr.FIELD.Shoot(scr.POS, action, false)
+		// fmt.Printf("		time: %f\n", time)
 		if err != nil {
-			return state, -1, true, err
+			return state, 0, true, err
 		} else {
 			if result == "GOAL" {
 				return state, (10.0 / time), true, nil
@@ -106,8 +104,7 @@ func (scr *Soccer) Step(
 
 // Reset sets the current state to the mid backfield.
 func (scr *Soccer) Reset() float64 {
-	scr.POS = GeneratePos(112, 100, false)
-	scr.NUM_STEPS = 0
+	scr.POS = GeneratePos(112, 170, true)
 	return scr.OBSERVATION_SPACE[0][1]*scr.POS.DISTANCE_Y + scr.POS.DISTANCE_X
 }
 

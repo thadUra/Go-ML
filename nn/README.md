@@ -1,6 +1,6 @@
-# Golang-Machine-Learning nn
+# Go-ML nn
 
-[![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Golang-Machine-Learning/nn)
+[![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Go-ML/nn)
 
 Package nn is a machine learning neural network package for Go.
 

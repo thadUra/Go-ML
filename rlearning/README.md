@@ -1,6 +1,6 @@
-# Golang-Machine-Learning rlearning
+# Go-ML rlearning
 
-[![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Golang-Machine-Learning/rlearning)
+[![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Go-ML/rlearning)
 
 Package rlearning is a ml reinforcement learning package for Go.
 

@@ -84,11 +84,11 @@ func (f Field) Shoot(
 	// Check shot parameters
 	limitations := f.GetShotParameterLimits()
 	if horizontal_angle < limitations[0][0] || horizontal_angle > limitations[0][1] {
-		return "", 0, errors.New("field.Shoot: horizontal angle not in range")
+		return "", 10000, errors.New("field.Shoot: horizontal angle not in range")
 	} else if vertical_angle < limitations[1][0] || vertical_angle > limitations[1][1] {
-		return "", 0, errors.New("field.Shoot: vertical angle not in range")
+		return "", 10000, errors.New("field.Shoot: vertical angle not in range")
 	} else if power < limitations[2][0] || power > limitations[2][1] {
-		return "", 0, errors.New("field.Shoot: power not in range")
+		return "", 10000, errors.New("field.Shoot: power not in range")
 	}
 
 	// Parameters for goal
@@ -180,6 +180,9 @@ func (f Field) Shoot(
 			 */
 			roll_distance := length - current_distance
 			final_vel := math.Sqrt(velocity_x*velocity_x + (2 * coeff_friction * gravity * roll_distance))
+			if final_vel < 0 || math.IsNaN(final_vel) {
+				return "MISS", 0, nil
+			}
 			test_time := (final_vel - velocity_x) / (coeff_friction * gravity)
 			new_duration += test_time
 			if debug {

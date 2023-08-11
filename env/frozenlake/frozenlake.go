@@ -9,7 +9,7 @@ import (
 	"math"
 	"math/rand"
 
-	"github.com/thadUra/Golang-Machine-Learning/env"
+	"github.com/thadUra/Go-ML/env"
 )
 
 // FrozenLake represents the frozen lake environment and its parameters.

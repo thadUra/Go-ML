@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thadUra/Golang-Machine-Learning/rlearning"
+	"github.com/thadUra/Go-ML/rlearning"
 	"gonum.org/v1/gonum/mat"
 )
 

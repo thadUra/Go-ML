@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 
-	"github.com/thadUra/Golang-Machine-Learning/env/soccer"
-	"github.com/thadUra/Golang-Machine-Learning/rlearning"
+	"github.com/thadUra/Go-ML/env/soccer"
+	"github.com/thadUra/Go-ML/rlearning"
 )
 
 /**
@@ -16,8 +16,8 @@ func TestSoccer(t *testing.T) {
 	env := soccer.NewSoccer()
 	max_episodes := 10
 	max_actions := 500
-	learning_rate := 0.93
-	discount := 0.95
+	learning_rate := 0.95
+	discount := 0.2
 	exploration_rate := 1.0
 	exploration_decay := 1.0 / float64(max_episodes)
 	if env.GetNumObservations() != 77850 {

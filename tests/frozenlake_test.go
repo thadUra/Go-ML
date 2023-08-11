@@ -3,9 +3,8 @@ package tests
 import (
 	"testing"
 
-	"github.com/thadUra/Golang-Machine-Learning/rlearning"
-
-	"github.com/thadUra/Golang-Machine-Learning/env/frozenlake"
+	"github.com/thadUra/Go-ML/env/frozenlake"
+	"github.com/thadUra/Go-ML/rlearning"
 )
 
 /**
