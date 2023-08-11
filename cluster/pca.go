@@ -29,7 +29,7 @@ func PCA(data [][]float64, n int) ([][]float64, error) {
 		return data, errors.New("PCA(): Cannot reduce dimensions as cols is less than n")
 	}
 
-	// Subtract mean from each col
+	// Subtract mean from each col to standardize
 	x_mean := data
 	for i := 0; i < cols; i++ {
 		mean := 0.0
