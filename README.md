@@ -1,14 +1,14 @@
 # Go-ML
 [![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](http://www.gnu.org/licenses/gpl-3.0)
-[![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Golang-Machine-Learning)
+[![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Go-ML)
 [![stability-unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)](https://github.com/emersion/stability-badges#unstable)
 
-Golang Machine Learning is a library aimed at providing ML functionality and capability to Go. Several packages provide usage with neural networks, clustering algorithms, and reinforcement learning.
+Go Machine Learning is a library aimed at providing ML functionality and capability to Go. Several packages provide usage with neural networks, clustering algorithms, and reinforcement learning.
 
 ## Installation
 The library currently contains only pure Go. Installation can be done using `go get`.
 ```
-go get -u github.com/thadUra/Golang-Machine-Learning
+go get -u github.com/thadUra/Go-ML
 ```
 
 ## Roadmap
