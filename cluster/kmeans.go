@@ -9,16 +9,16 @@ import (
 // KMeans represents a classification model utilizing K-Means clustering
 type KMeans struct {
 	CENTROIDS    [][]float64
-	CLUSTERS     int
-	MAX_EPISODES int
+	clusters     int
+	max_episodes int
 }
 
 // NewKMeans creates a new K-Means model with `n` clusters. `Max_eps` represents the maximum
 // amount of episodes or iterations the model will train on until convergence.
 func NewKMeans(n, max_eps int) *KMeans {
 	var model KMeans
-	model.CLUSTERS = n
-	model.MAX_EPISODES = max_eps
+	model.clusters = n
+	model.max_episodes = max_eps
 	return &model
 }
 
@@ -36,7 +36,7 @@ func (model *KMeans) Train(data [][]float64) error {
 	model.CENTROIDS = append(model.CENTROIDS, data[init_idx])
 
 	// Initialize other centroids with probabilities proportional to their distances to the first centroid
-	for i := 1; i < model.CLUSTERS; i++ {
+	for i := 1; i < model.clusters; i++ {
 		// Calculate dist from points to centroids
 		dist := make([]float64, len(data))
 		sum := 0.0
@@ -69,7 +69,7 @@ func (model *KMeans) Train(data [][]float64) error {
 	}
 
 	// Adjust centroids over iterations until convergence or max_episodes
-	for iter := 0; iter < model.MAX_EPISODES; iter++ {
+	for iter := 0; iter < model.max_episodes; iter++ {
 		// Assign point to nearest centroid
 		points := make(map[int][][]float64)
 		for j := range data {
