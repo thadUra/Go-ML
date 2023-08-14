@@ -15,11 +15,14 @@ go get -u github.com/thadUra/Go-ML
 | Tasks To Do                                 | Current Status | Finished | 
 |---------------------------------------------|----------------|----------|
 | Initial Documentation for all packages      | Completed      | &check;  |
-| Make custom soccer env more deterministic   | In Progress    | &cross;  |
+| Implement custom dataframe type             | In Progress    | &cross;  |
+| Implement better error handling             | In Progress    | &cross;  |
+| Change visibility of struct vars and funcs  | In Progress    | &cross;  |
+| Make custom soccer env more deterministic   | Not Started    | &cross;  |
 | Optimize memory in implementation           | Not Started    | &cross;  |
-| Add more algorithms and functionality       | Not Started    | &cross;  |
+| Complete convolutional and flat layer       | Not Started    | &cross;  |
+| Add more activation layer functions         | Not Started    | &cross;  |
 | Utilize goroutines to improve runtime       | Not Started    | &cross;  |
-| Implement custom dataframe type             | Not Started    | &cross;  |
 | ...                                         | ...            | ...      |
 
 ### Notes
