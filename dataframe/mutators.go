@@ -1,7 +1,12 @@
 package dataframe
 
 // Insert creates a new column and inserts it into the dataframe.
-func (df *Dataframe) Insert() {
+func (df *Dataframe) InsertCol() {
+
+}
+
+// Insert creates a new row and inserts it into the dataframe.
+func (df *Dataframe) InsertRow() {
 
 }
 

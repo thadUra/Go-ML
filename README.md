@@ -8,12 +8,12 @@ Go Machine Learning is a library aimed at providing ML functionality and capabil
 ## Installation
 The library currently contains only pure Go. Installation can be done using `go get`.
 ```
-    go get -u github.com/thadUra/Go-ML
+go get -u github.com/thadUra/Go-ML
 ```
 
 Importing the library into your Go files just requires an import statement.
 ```
-    import "github.com/thadUra/Go-ML/"
+import "github.com/thadUra/Go-ML/"
 ```
 
 ## Roadmap
