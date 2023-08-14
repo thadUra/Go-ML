@@ -16,6 +16,7 @@ import (
 /**
  * TestMultithread()
  * Tests singlethread vs multhreading
+ * Basic testing indicates that 5 to 20 threads can decrease runtime the best
  */
 func TestMultithread(t *testing.T) {
 	// Open iris data file (WIP CLOSE FILE)
@@ -52,7 +53,7 @@ func TestMultithread(t *testing.T) {
 	}
 
 	// Test KMeans with a single thread
-	num_iterations := 100000
+	num_iterations := 1000
 	start := time.Now()
 	for i := 0; i < num_iterations; i++ {
 		km := cluster.NewKMeans(3, 500)
@@ -60,12 +61,19 @@ func TestMultithread(t *testing.T) {
 		_, _, _ = km.Evaluate(result)
 	}
 	duration := time.Since(start)
-	fmt.Printf("single thread: %v\n", duration)
+	fmt.Printf("single thread -> %v\n", duration)
 
-	// Test KMeans with multithreading
-	start = time.Now()
+	// Test KMeans with various groups
+	groups := []int{2, 5, 10, 20, 25, 50, 100}
+	for _, g := range groups {
+		multithread(result, num_iterations, g)
+	}
+
+}
+
+func multithread(result [][]float64, num_iterations, groups int) {
+	start := time.Now()
 	var wg sync.WaitGroup
-	groups := 10
 	wg.Add(groups)
 	for i := 0; i < groups; i++ {
 		go func() {
@@ -78,6 +86,6 @@ func TestMultithread(t *testing.T) {
 		}()
 	}
 	wg.Wait()
-	duration = time.Since(start)
-	fmt.Printf("multithread: %v\n", duration)
+	duration := time.Since(start)
+	fmt.Printf("multithread with 1:%d -> %v\n", num_iterations/groups, duration)
 }
