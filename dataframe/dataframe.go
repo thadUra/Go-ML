@@ -1,8 +1,10 @@
 // The dataframe package contains code for the dataframe datatype, its functionality,
 // and manipulation. Currently, the only variable types accepted are ints, strings,
-// float64s, and bools. The ints need to be in base10.
+// float64s, and bools. The ints need to be in base10. However, all slices and data
+// need to be formatted as an interface type.
 //
 // Inspiration for the datatype comes from the pandas.Dataframe library.
+// However, this package is very limited in functionality in comparison. For example, row indexing is not currently supported unlike pandas. More functionality will be available with more support and time.
 package dataframe
 
 import (
@@ -26,19 +28,23 @@ type Dataframe struct {
 // DataframeFromMap returns a dataframe given a map of tabular data.
 func DataframeFromMap(data map[string][]interface{}) Dataframe {
 	var df Dataframe
-	df.data = data
+
 	// Get number of rows and cols
-	for _, vals := range data {
+	for label, vals := range data {
 		df.cols++
+		df.order = append(df.order, label)
 		if len(vals) > df.rows {
 			df.rows = len(vals)
 		}
 	}
-	// Fill in empty cells with NaN
-	for label := range data {
-		df.order = append(df.order, label)
-		for i := len(df.data[label]); i < df.rows; i++ {
-			df.data[label] = append(df.data[label], math.NaN())
+
+	// Initialize table data
+	df.data = make(map[string][]interface{})
+	for i := 0; i < df.cols; i++ {
+		df.data[df.order[i]] = make([]interface{}, df.rows)
+		copy(df.data[df.order[i]], data[df.order[i]])
+		for j := len(data[df.order[i]]); j < df.rows; j++ {
+			df.data[df.order[i]][j] = math.NaN()
 		}
 	}
 	return df
@@ -167,6 +173,8 @@ func DataframeFromCSV(filepath string, header bool) Dataframe {
 				} else if it, err := strconv.ParseInt(record[j], 10, 64); err == nil {
 					df.data[df.order[j]][i] = it
 					continue
+				} else if record[j] == "Null" || record[j] == "N/A" || record[j] == "" || record[j] == "NaN" {
+					df.data[df.order[j]][i] = math.NaN()
 				} else {
 					df.data[df.order[j]][i] = record[j]
 				}

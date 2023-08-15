@@ -1,6 +1,6 @@
 # Go-ML cluster
 
-[![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Go-ML/clustering)
+[![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Go-ML/cluster)
 
 Package cluster is a machine learning clustering package for Go.
 

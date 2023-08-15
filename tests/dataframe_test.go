@@ -67,4 +67,54 @@ func TestDataframe(t *testing.T) {
 	fmt.Println(val)
 	val, _ = df.Iat(-1, 1)
 	fmt.Println(val)
+	val, _ = df.Loc(122)
+	fmt.Println(val)
+	val, _ = df.Iloc(100, 106)
+	fmt.Println(val)
+	df = dataframe.DataframeFromMap(data)
+	null := df.IsNull()
+	df.Head(5)
+	null.Head(5)
+	count := df.Count()
+	fmt.Println(count)
+	unique := df.Nunique(0)
+	fmt.Println(unique)
+	unique = df.Nunique(1)
+	fmt.Println(unique)
+
+	// Test mutator functions
+	new_col := make([]interface{}, 7)
+	for j := 0; j < len(new_col); j++ {
+		new_col[j] = rand.Float64() * 10
+	}
+	new_col[2] = math.NaN()
+	df.InsertCol(new_col, "testNewCol")
+	df.Head(8)
+	new_row := make([]interface{}, 7)
+	for j := 0; j < len(new_row); j++ {
+		new_row[j] = rand.Float64() * 10
+	}
+	new_row[1] = true
+	df.InsertRow(new_row[0:4])
+	df.Tail(5)
+	df.DropNull()
+	df.Head(5)
+	df.InsertRow(new_row[0:6])
+	new_row[1] = 523
+	df.Tail(5)
+	df.InsertRow(new_row[0:7])
+	df.Tail(5)
+	new_row[1] = rand.Float64()
+	df.InsertRow(new_row[0:7])
+	fmt.Println(df.Pop("-1"))
+	fmt.Println(df.Pop("testNewCol"))
+	df.Head(5)
+	df.Sort_values([]string{"bools", "floats", "strs", "0"}, true)
+	df.Head(5)
+	new_labels := []string{"some", "label", "here", "i", "guess", "lol", "test"}
+	df.Relabel(new_labels)
+	df.Head(5)
+	new_labels[0] = "REPLACE HERE?"
+	df.Relabel(new_labels)
+	df.Head(5)
 }
