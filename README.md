@@ -32,12 +32,13 @@ import "github.com/thadUra/Go-ML/"
 | ...                                         | ...            | ...      |
 
 ## Benchmarks
-To view the benefits of using Go over a popular language such as Python for machine learning, benchmark tests were made comparing the GoML package to its Python counterpart. The benchmark script can be found at `./tests/benchmark/benchmark.sh`. Runtime comparisons are currently made for Principal Component Analysis, K-Means clustering, and a simple Neural Network.
+To view the benefits of using Go over a popular language such as Python for machine learning, benchmark tests were made comparing the GoML package to its Python counterpart. The benchmark script can be found at `./tests/benchmark/benchmark.sh`. Runtime comparisons are currently made for Dataframe operations on the Iris Dataset, Principal Component Analysis, K-Means clustering, and a simple Neural Network.
 
 This benchmark run was made on a MacBook Pro wiht a 2Ghz Quad-Core Intel Core i5 processor.
 ```
     systemDir benchmark % ./benchmark.sh
     === GO BENCHMARK ===
+    Dataframe: 0.000479472 seconds
     K-Means: 0.000426072 seconds
     ...
     NN: 0.025185177 seconds
@@ -47,6 +48,7 @@ This benchmark run was made on a MacBook Pro wiht a 2Ghz Quad-Core Intel Core i5
     === END GO BENCHMARK ===
 
     === PY BENCHMARK ===
+    Dataframe: 0.004310131072998047 seconds
     K-Means: 0.00932002067565918 seconds
     ...
     NN: 1.6983931064605713 seconds
