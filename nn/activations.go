@@ -6,6 +6,9 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+// Activation defines a type for any activation function.
+type Activation func(input *mat.Dense) *mat.Dense
+
 // apply performs the function on a matrix and returns the new matrix.
 func apply(fn func(x float64) float64, input *mat.Dense) *mat.Dense {
 	rows, cols := input.Dims()

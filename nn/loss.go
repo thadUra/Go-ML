@@ -6,6 +6,19 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+// LossFwd defines a type for any loss function for forward propagation.
+type LossFwd func(y_true, y_pred *mat.Dense, params []float64) float64
+
+// LossBwd defines a type for any loss function for back propagation.
+type LossBwd func(y_true, y_pred *mat.Dense, params []float64) *mat.Dense
+
+// Loss defines the essential loss functions for the neural network.
+type Loss struct {
+	LOSSFUNC   LossFwd
+	LOSSDERIV  LossBwd
+	LOSSPARAMS []float64
+}
+
 // Mse returns the mean squared error given `y_true` and `y_pred` matrices.
 func Mse(y_true, y_pred *mat.Dense, params []float64) float64 {
 	ret := mat.DenseCopyOf(y_true)

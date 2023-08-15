@@ -10,9 +10,7 @@ import (
 // Network represents the neural network model specifics and related helper functions for loss.
 type Network struct {
 	LAYERS      []*Layer
-	LOSSFUNC    func(y_true, y_pred *mat.Dense, params []float64) float64
-	LOSSDERIV   func(y_true, y_pred *mat.Dense, params []float64) *mat.Dense
-	LOSSPARAMS  []float64
+	LOSS        Loss
 	OUTPUT_SIZE int
 	LAYER_COUNT int
 }
@@ -67,28 +65,29 @@ func (net *Network) AddLayer(layerType, activationType string, output_nodes int)
 	net.LAYERS = append(net.LAYERS, &activation)
 }
 
-// SetLoss initializes the loss function for the network given `lossType`.
+// SetLoss initializes the loss function for the network given `lossType`. If the string
+// is empty, it defaults to MSE loss.
 func (net *Network) SetLoss(lossType string, params []float64) {
-	net.LOSSPARAMS = params
+	net.LOSS.LOSSPARAMS = params
 	switch lossType {
 	case "MSE":
-		net.LOSSFUNC = Mse
-		net.LOSSDERIV = MseDerivative
+		net.LOSS.LOSSFUNC = Mse
+		net.LOSS.LOSSDERIV = MseDerivative
 	case "HMSE":
-		net.LOSSFUNC = Hmse
-		net.LOSSDERIV = HmseDerivative
+		net.LOSS.LOSSFUNC = Hmse
+		net.LOSS.LOSSDERIV = HmseDerivative
 	case "RMSE":
-		net.LOSSFUNC = Rmse
-		net.LOSSDERIV = RmseDerivative
+		net.LOSS.LOSSFUNC = Rmse
+		net.LOSS.LOSSDERIV = RmseDerivative
 	case "MAE":
-		net.LOSSFUNC = Mae
-		net.LOSSDERIV = MaeDerivative
+		net.LOSS.LOSSFUNC = Mae
+		net.LOSS.LOSSDERIV = MaeDerivative
 	case "HUBER":
-		net.LOSSFUNC = Huber
-		net.LOSSDERIV = HuberDerivative
+		net.LOSS.LOSSFUNC = Huber
+		net.LOSS.LOSSDERIV = HuberDerivative
 	default:
-		net.LOSSFUNC = Mse
-		net.LOSSDERIV = MseDerivative
+		net.LOSS.LOSSFUNC = Mse
+		net.LOSS.LOSSDERIV = MseDerivative
 	}
 }
 
@@ -136,9 +135,9 @@ func (net *Network) Fit(x_train, y_train [][]float64, epochs int, learning_rate 
 			// Convert output to matrix for loss computation
 			reference := mat.NewDense(1, len(y_train[j]), y_train[j])
 			// Add error
-			err += net.LOSSFUNC(reference, output, net.LOSSPARAMS)
+			err += net.LOSS.LOSSFUNC(reference, output, net.LOSS.LOSSPARAMS)
 			// Backwards propagation
-			error := net.LOSSDERIV(reference, output, net.LOSSPARAMS)
+			error := net.LOSS.LOSSDERIV(reference, output, net.LOSS.LOSSPARAMS)
 			for l := len(net.LAYERS) - 1; l >= 0; l-- {
 				error = (*net.LAYERS[l]).BackPropagation(error, learning_rate)
 			}

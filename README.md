@@ -23,7 +23,7 @@ import "github.com/thadUra/Go-ML/"
 | Add benchmark tests against Python          | Completed      | &check;  |
 | Implement custom dataframe type             | In Progress    | &cross;  |
 | Implement better error handling (log.fatal) | In Progress    | &cross;  |
-| Change visibility of struct vars and funcs  | In Progress    | &cross;  |
+| Change visibility of struct vars and funcs  | Completed      | &check;  |
 | Make custom soccer env more deterministic   | Not Started    | &cross;  |
 | Optimize memory in implementation           | Not Started    | &cross;  |
 | Complete convolutional and flat layer       | Not Started    | &cross;  |
