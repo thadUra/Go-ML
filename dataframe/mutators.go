@@ -144,10 +144,11 @@ func (df *Dataframe) Pop(col string) ([]interface{}, error) {
 	return ret, nil
 }
 
-// Sort_values sorts the dataframe according to the labels in 'by'.
-// If different types exist in a column, precedence is ordered by
-// int or float64, bool, string, and then null values.
-func (df *Dataframe) Sort_values(by []string, ascending bool) {
+// Sort_values sorts the dataframe according to the column `label`. If
+// `ascending` is false, it sorts in descending order. If different types
+// exist in a column, precedence is ordered by int or float64, bool,
+// string, and then null values.
+func (df *Dataframe) Sort_values(label string, ascending bool) {
 	// Create array of indices for keeping track of sort across columns
 	sorted_indices := make([]int, df.rows)
 	for i := range sorted_indices {
@@ -155,28 +156,20 @@ func (df *Dataframe) Sort_values(by []string, ascending bool) {
 	}
 
 	// Get indices after sort
-	transform := 0
-	for i := len(by) - 1; i >= 0; i-- {
-		// Check if column exists
-		if df.data[by[i]] == nil {
-			continue
-		}
-		// Transform data from previous sort
-		col_data := make([]interface{}, df.rows)
-		for j := 0; j < df.rows; j++ {
-			col_data[j] = df.data[by[i]][sorted_indices[j]]
-		}
-		sort.Sort(sortWrapper{col_data, sorted_indices})
-		transform++
-	}
-
-	// Check if anything was sorted
-	if transform == 0 {
+	if df.data[label] == nil {
 		return
+	}
+	if !ascending {
+		sort.Sort(sort.Reverse(sortWrapper{df.data[label], sorted_indices}))
+	} else {
+		sort.Sort(sortWrapper{df.data[label], sorted_indices})
 	}
 
 	// Sort all the data according to indices
 	for i := 0; i < len(df.order); i++ {
+		if df.order[i] == label {
+			continue
+		}
 		col_data := make([]interface{}, df.rows)
 		for j := 0; j < df.rows; j++ {
 			col_data[j] = df.data[df.order[i]][sorted_indices[j]]

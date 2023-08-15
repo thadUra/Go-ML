@@ -109,7 +109,7 @@ func TestDataframe(t *testing.T) {
 	fmt.Println(df.Pop("-1"))
 	fmt.Println(df.Pop("testNewCol"))
 	df.Head(5)
-	df.Sort_values([]string{"bools", "floats", "strs", "0"}, true)
+	df.Sort_values("bools", true)
 	df.Head(5)
 	new_labels := []string{"some", "label", "here", "i", "guess", "lol", "test"}
 	df.Relabel(new_labels)

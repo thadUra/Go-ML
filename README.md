@@ -3,7 +3,7 @@
 [![Documentation](https://img.shields.io/badge/documentation-GoDoc-blue.svg)](https://pkg.go.dev/github.com/thadUra/Go-ML)
 [![stability-unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)](https://github.com/emersion/stability-badges#unstable)
 
-Go Machine Learning is a library aimed at providing ML functionality and capability to Go. Several packages provide usage with neural networks, clustering algorithms, and reinforcement learning.
+Go Machine Learning is a library aimed at providing ML functionality and capability to Go. Several packages provide usage with neural networks, clustering algorithms, reinforcement learning, and a custom dataframe type.
 
 ## Installation
 The library currently contains only pure Go. Installation can be done using `go get`.
@@ -21,7 +21,7 @@ import "github.com/thadUra/Go-ML/"
 |---------------------------------------------|----------------|----------|
 | Initial Documentation for all packages      | Completed      | &check;  |
 | Add benchmark tests against Python          | Completed      | &check;  |
-| Implement custom dataframe type             | In Progress    | &cross;  |
+| Implement custom dataframe type             | Completed      | &check;  |
 | Implement better error handling (log.fatal) | In Progress    | &cross;  |
 | Change visibility of struct vars and funcs  | Completed      | &check;  |
 | Make custom soccer env more deterministic   | Not Started    | &cross;  |
