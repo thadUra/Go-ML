@@ -22,13 +22,13 @@ import "github.com/thadUra/Go-ML/"
 | Initial Documentation for all packages      | Completed      | &check;  |
 | Add benchmark tests against Python          | Completed      | &check;  |
 | Implement custom dataframe type             | Completed      | &check;  |
-| Implement better error handling (log.fatal) | In Progress    | &cross;  |
+| Implement better error handling (log.fatal) | Completed      | &check;  |
 | Change visibility of struct vars and funcs  | Completed      | &check;  |
+| Optimize memory in implementation           | In Progress    | &cross;  |
+| Utilize goroutines to optimize runtime      | In Progress    | &cross;  |
 | Make custom soccer env more deterministic   | Not Started    | &cross;  |
-| Optimize memory in implementation           | Not Started    | &cross;  |
 | Complete convolutional and flat layer       | Not Started    | &cross;  |
 | Add more activation layer functions         | Not Started    | &cross;  |
-| Utilize goroutines to optimize runtime      | Not Started    | &cross;  |
 | ...                                         | ...            | ...      |
 
 ## Benchmarks

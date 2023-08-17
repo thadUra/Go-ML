@@ -160,8 +160,8 @@ func (df *Dataframe) Iat(row, col int) (interface{}, error) {
 	return df.data[df.order[col]][row], nil
 }
 
-// Loc returns a row of data given an index in the form of a map.
-func (df *Dataframe) Loc(row int) (map[string]interface{}, error) {
+// IlocRow returns a row of data given an index in the form of a map.
+func (df *Dataframe) LocRow(row int) (map[string]interface{}, error) {
 	if row >= df.rows || row < 0 {
 		return nil, errors.New("dataframe.Loc(): row out of range")
 	}
@@ -172,8 +172,33 @@ func (df *Dataframe) Loc(row int) (map[string]interface{}, error) {
 	return ret, nil
 }
 
-// Iloc returns rows of data given a range of indices inclusive.
-func (df *Dataframe) Iloc(start, end int) (map[string][]interface{}, error) {
+// LocCol returns a column of data given a label.
+func (df *Dataframe) LocCol(col string) ([]interface{}, error) {
+	if df.data[col] == nil {
+		return nil, errors.New("dataframe.Pop(): column doesnt exist")
+	}
+	ret := make([]interface{}, df.rows)
+	copy(ret, df.data[col])
+	return ret, nil
+}
+
+// IocCol returns a column of data given an array of labels.
+func (df *Dataframe) IlocCol(cols []string) ([][]interface{}, error) {
+	for _, i := range cols {
+		if df.data[i] == nil {
+			return nil, errors.New("dataframe.Pop(): one of the columns dont exist")
+		}
+	}
+	ret := make([][]interface{}, len(cols))
+	for i := 0; i < len(cols); i++ {
+		ret[i] = make([]interface{}, df.rows)
+		copy(ret[i], df.data[cols[i]])
+	}
+	return ret, nil
+}
+
+// IlocRow returns rows of data given a range of indices inclusive.
+func (df *Dataframe) IlocRow(start, end int) (map[string][]interface{}, error) {
 	if start >= df.rows || start < 0 {
 		return nil, errors.New("dataframe.Iloc(): out of range")
 	}

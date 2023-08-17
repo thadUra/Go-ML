@@ -29,7 +29,7 @@ func Spectral(data [][]float64, radius float64) ([]string, error) {
 	}
 
 	// Determine the cluster for each data point
-	// NOTE: No need to sort via eigenvalues since Eigen() returns them sorted in ascending order
+	// NOTE: No need to sort via eigenvalues since EigenSym() returns them sorted in ascending order
 	for i := range data {
 		if eigen_vectors[i][1] >= 0 {
 			label = append(label, "Cluster One")

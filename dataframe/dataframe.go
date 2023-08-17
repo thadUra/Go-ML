@@ -137,6 +137,7 @@ func DataframeFromCSV(filepath string, header bool) Dataframe {
 		log.Fatalf(`DataframeFromCSV(): failed to open file -> "%s"`, err)
 	}
 	r = csv.NewReader(file)
+	added_header := false
 	for i := 0; i < rows; i++ {
 		record, err := r.Read()
 		if err == io.EOF {
@@ -146,7 +147,7 @@ func DataframeFromCSV(filepath string, header bool) Dataframe {
 			log.Fatalf(`DataframeFromCSV(): failed in file reading -> "%s"`, err)
 		}
 		// Handle any column headers if any
-		if i == 0 {
+		if !added_header {
 			if header {
 				df.order = append(df.order, record...)
 			}
@@ -158,20 +159,22 @@ func DataframeFromCSV(filepath string, header bool) Dataframe {
 			for j := range df.order {
 				df.data[df.order[j]] = make([]interface{}, df.rows)
 			}
+			added_header = true
 			if header {
+				i--
 				continue
 			}
 		}
 		for j := 0; j < df.cols; j++ {
 			if j < len(record) {
-				if bo, err := strconv.ParseBool(record[j]); err == nil {
-					df.data[df.order[j]][i] = bo
+				if it, err := strconv.ParseInt(record[j], 10, 0); err == nil {
+					df.data[df.order[j]][i] = int(it)
 					continue
 				} else if fl, err := strconv.ParseFloat(record[j], 64); err == nil {
 					df.data[df.order[j]][i] = fl
 					continue
-				} else if it, err := strconv.ParseInt(record[j], 10, 64); err == nil {
-					df.data[df.order[j]][i] = it
+				} else if bo, err := strconv.ParseBool(record[j]); err == nil {
+					df.data[df.order[j]][i] = bo
 					continue
 				} else if record[j] == "Null" || record[j] == "N/A" || record[j] == "" || record[j] == "NaN" {
 					df.data[df.order[j]][i] = math.NaN()
